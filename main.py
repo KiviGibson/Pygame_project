@@ -1,6 +1,5 @@
 import pygame
-
-pygame.display.set_mode((400, 500))
+import options
 running = True
 
 while running:
