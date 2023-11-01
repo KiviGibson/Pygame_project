@@ -1,9 +1,5 @@
-import pygame
-import options
-running = True
+from game import Game
 
-while running:
-    for event in pygame.event.get():
+game = Game()
 
-        if event.type == pygame.QUIT:
-            running = False
+game.start()

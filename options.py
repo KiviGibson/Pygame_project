@@ -1,19 +1,33 @@
 import pygame
 
-title = "Game Title"
-icon = ""
-# width height of window
-pygame.display.set_mode((400, 500))
+class Option:
+    def __init__(self, title, icon, size):
+        self.title = title
+        self.icon = icon
+        self.size = size
 
-# background surface color
-surface = pygame.display.get_surface()
+    @property
+    def icon(self):
+        return self._icon
 
-color = (20, 20, 20)
-surface.fill(color)
-pygame.display.flip()
+    @icon.setter
+    def icon(self, icon):
+        try:
+            self._icon = pygame.image.load(icon)
+        except FileNotFoundError:
+            self._icon = False
+    @property
+    def title(self):
+        return self._title
 
-# setting window name
-pygame.display.set_caption(title)
-if icon != "":
-    IconImage = pygame.image.load(icon)
-    pygame.display.set_icon(IconImage)
+    @title.setter
+    def title(self, title):
+        self._title = title
+
+    @property
+    def size(self):
+        return self._size
+
+    @size.setter
+    def size(self, size):
+        self._size = size
