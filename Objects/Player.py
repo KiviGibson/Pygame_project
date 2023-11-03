@@ -1,6 +1,6 @@
 from Objects.GameObject import GameObject
-from Game.Renderer import Renderer
-from Game.Input import Input
+from Objects.Renderer import Renderer
+from Objects.Input import Input
 
 class Player(GameObject):
     def __init__(self, position, sprite):
@@ -12,5 +12,5 @@ class Player(GameObject):
         self.renderer.draw(self.transform.position[0], self.transform.position[1])
 
     def walk(self,mult=1,speed=5):
-        move = ((self.input.x_axis * speed, self.input.y_axis * speed))
+        move = ((self.input.x_axis * mult * speed, self.input.y_axis * mult * speed))
         self.transform.move(move)

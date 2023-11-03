@@ -1,10 +1,12 @@
 import pygame
 
 class Option:
-    def __init__(self, title, icon, size):
+    def __init__(self, title, icon, size, tickrate, color=(70,70,70)):
         self.title = title
         self.icon = icon
         self.size = size
+        self.tickrate = tickrate
+        self.color = color
 
     @property
     def icon(self):
