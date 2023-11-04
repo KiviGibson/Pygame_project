@@ -4,9 +4,9 @@ from Game.Loader import Loader
 import pygame
 
 class Player(GameObject):
-    def __init__(self, position, sprite, game, speed=5):
+    def __init__(self, position, game, speed=5):
         super().__init__(position, "Player")
-        self.loader = Loader("../Animations")
+        self.loader = Loader()
         self.animations = {
             "idle": self.loader.loadimageArray("/Player/idle", "png"),
             "walk": self.loader.loadimageArray("/Player/walk", "png")
@@ -29,6 +29,7 @@ class Player(GameObject):
             self.facing = int(0.5+(-self.input.x_axis))
         self.animate(move)
         self.rect.topleft = self.transform.position
+
     def animate(self, move):
         if move[0] != 0 or move[1] != 0:
             if self.state == "idle":
@@ -39,7 +40,7 @@ class Player(GameObject):
                 self.currentsprite = 0
                 self.state = "idle"
 
-        self.currentsprite += 0.25
+        self.currentsprite += 0.20
         self.currentsprite %= len(self.animations[self.state])
         self.image = self.animations[self.state][int(self.currentsprite)]
-        self.image = pygame.transform.flip(self.image, self.facing, 0)
+        self.image = pygame.transform.flip(self.image, bool(self.facing), 0)

@@ -1,7 +1,7 @@
 import pygame
 
 class Option:
-    def __init__(self, title, icon, size, tickrate, color=(70,70,70)):
+    def __init__(self, title, icon, size, tickrate, color=(70, 70, 70)):
         self.title = title
         self.icon = icon
         self.size = size

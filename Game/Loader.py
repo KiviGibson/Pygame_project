@@ -2,8 +2,8 @@ from pygame import *
 
 
 class Loader:
-    def __init__(self, path_to_folder="./"):
-        self.path = path_to_folder
+    def __init__(self, path_to_folder="C:/Users/popla/PycharmProjects/pygame/Pygame_project/Animations"):
+        self.path_to_folder = path_to_folder
         self._image = set()
 
     def loadimage(self, name, type):
@@ -14,17 +14,15 @@ class Loader:
         else:
             return img
 
-    def loadimageArray(self, path, type):
+    def loadimageArray(self, path_to_animation, type):
         images = []
         counter = 0
         while True:
             try:
-                print(f"")
-                images.append(image.load(f"C:/Users/popla/PycharmProjects/pygame/Pygame_project/Animations{path}/{counter}.{type}"))
+                images.append(image.load(f"{self.path_to_folder}{path_to_animation}/{counter}.{type}"))
                 counter += 1
             except FileNotFoundError:
                 break
-        print(images)
         return images
 
     def searchimage(self, name):
