@@ -1,4 +1,5 @@
 from pygame import *
+import pygame
 import Game.Options as gameOption
 
 
@@ -7,28 +8,35 @@ class Game:
         init()
         self.running = True
         self.option = gameOption.Option(name, img, size, tickrate)
-        option = self.option
         self.clock = time.Clock()
         self.gameobjects = []
-        self.userobjects = []
-        display.set_mode(option.size)
 
+        self.userobjects = []
+        self.events = []
+
+        option = self.option
+        display.set_mode(option.size)
         display.set_caption(option.title)
 
         if option.icon:
             icon = image.load(option.icon)
             display.set_icon(icon)
+
     def start(self):
+        moving_sprites = pygame.sprite.Group()
+        for entity in self.gameobjects:
+            entity.start(self)
+            moving_sprites.add(entity)
+
         while self.running:
+            self.events.clear()
             for e in event.get():
-                for players in self.userobjects:
-                    players.input.event(e)
                 if e.type == QUIT:
                     self.running = False
-            for players in self.userobjects:
-                players.walk(mult=self.clock.get_fps()*0.01)
+                self.events.append(e)
             for entity in self.gameobjects:
-                entity.draw()
+                entity.update()
+            moving_sprites.draw(display.get_surface())
             self.clock.tick(self.option.tickrate)
             self.refresh()
 
@@ -38,6 +46,3 @@ class Game:
 
     def addobject(self, gameobject):
         self.gameobjects.append(gameobject)
-
-    def adduserobject(self, gameobject):
-        self.userobjects.append(gameobject)

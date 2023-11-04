@@ -1,9 +1,15 @@
 from Game.Game import Game
 from Objects.Player import Player
 
-game = Game(tickrate=120, name="Tiny Dungeon", size=(500, 600))
-player = Player((20, 20), "")
 
-game.addobject(player)
-game.adduserobject(player)
-game.start()
+def start():
+    game = Game(tickrate=60, name="Tiny Dungeon", size=(500, 600))
+    player = Player((180, 260), "./Animations/Player/idle/0.png", game)
+
+    game.addobject(player)
+
+    game.start()
+
+
+if __name__ == "__main__":
+    start()

@@ -14,6 +14,19 @@ class Loader:
         else:
             return img
 
+    def loadimageArray(self, path, type):
+        images = []
+        counter = 0
+        while True:
+            try:
+                print(f"")
+                images.append(image.load(f"C:/Users/popla/PycharmProjects/pygame/Pygame_project/Animations{path}/{counter}.{type}"))
+                counter += 1
+            except FileNotFoundError:
+                break
+        print(images)
+        return images
+
     def searchimage(self, name):
         for img in self._image:
             if img.name == name:
