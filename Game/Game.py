@@ -1,13 +1,13 @@
 from pygame import *
 import pygame
-import Game.Options as gameOption
+from Game import options
 
 
 class Game:
-    def __init__(self, tickrate=60, size=(400,500), name="Game Title", img=""):
+    def __init__(self, tickrate=60, size=(400, 500), name="Game Title", img=""):
         init()
         self.running = True
-        self.option = gameOption.Option(name, img, size, tickrate)
+        self.option = options.Option(name, img, size, tickrate)
         self.clock = time.Clock()
         self.gameobjects = []
 

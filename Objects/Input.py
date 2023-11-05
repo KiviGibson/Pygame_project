@@ -5,6 +5,7 @@ class Input:
     def __init__(self, game):
         self.x_axis = 0
         self.y_axis = 0
+        self.shift = 0
         self.game = game
 
     def events(self):
@@ -19,6 +20,8 @@ class Input:
                         self.x_axis = self.x_axis - 1
                     case pygame.K_d:
                         self.x_axis = self.x_axis + 1
+                    case pygame.K_LSHIFT:
+                        self.shift = 1
                     case _:
                         print("none pressed")
             elif event.type == pygame.KEYUP:
@@ -31,6 +34,8 @@ class Input:
                         self.x_axis = self.x_axis + 1
                     case pygame.K_d:
                         self.x_axis = self.x_axis - 1
+                    case pygame.K_LSHIFT:
+                        self.shift = 0
                     case _:
                         print("none unpressed")
 

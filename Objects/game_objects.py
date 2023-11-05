@@ -1,11 +1,11 @@
 import pygame
-from Objects.Transform import Transform
+from Objects import transform
 
 
 class GameObject(pygame.sprite.Sprite):
-    def __init__(self, position, name):
+    def __init__(self, position, name, scale=1):
         super().__init__()
-        self.transform = Transform(position, 0, 1)
+        self.transform = transform.Transform(position, 0, scale)
         self.name = name
         self.game = None
 
@@ -14,10 +14,10 @@ class GameObject(pygame.sprite.Sprite):
         return self._transform
 
     @transform.setter
-    def transform(self, transform):
-        if type(transform) != Transform:
+    def transform(self, trans):
+        if type(trans) != transform.Transform:
             raise TypeError("Wrong type!")
-        self._transform = transform
+        self._transform = trans
 
     @property
     def name(self):
