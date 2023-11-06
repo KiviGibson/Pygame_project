@@ -22,29 +22,29 @@ class Player(game_objects.GameObject):
         self.currentsprite = 0
         self.state = "idle"
         self.facing = 0
+        self.acc = 1
 
     def update(self):
         self.input.events()
         x = self.input.x_axis
-        y = self.input.y_axis
-        self.setstate(x, y)
-        self.changepos(x, y)
+        self.setstate(x)
+        self.changepos(x)
         self.animate()
         self.rect.topleft = self.transform.position
     
     def start(self, game):
         super().start(game)
 
-    def setstate(self, x, y):
+    def setstate(self, x):
         if x != 0:
             self.facing = int(0.5 + (-x))
-        if self.input.shift == 1 or (self.state == "run" and (x != 0 or y != 0)):
-            if x != 0 or y != 0:
+        if self.input.shift == 1 or (self.state == "run" and x != 0):
+            if x != 0:
                 self.state = "run"
             else:
                 self.state = "idle_run"
         else:
-            if x != 0 or y != 0:
+            if x != 0:
                 self.state = "walk"
             else:
                 self.state = "idle"
@@ -57,9 +57,13 @@ class Player(game_objects.GameObject):
         scale = [self.image.get_width()*self.transform.scale, self.image.get_height()*self.transform.scale]
         self.image = pygame.transform.scale(self.image, scale)
 
-    def changepos(self, x, y):
+    def changepos(self, x):
         speed = self.speed
         if self.state == "run":
-            speed *= 1.5
-        new = (x * speed, y * speed)
+            speed *= self.acc
+            self.acc += 0.07
+            self.acc = min(self.acc, 5)
+        else:
+            self.acc = 1
+        new = (x * speed, 0)
         self.transform.move(new)
