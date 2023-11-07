@@ -23,6 +23,7 @@ class Player(game_objects.GameObject):
         self.state = "idle"
         self.facing = 0
         self.acc = 1
+        self.y = 0
 
     def update(self):
         self.input.events()
@@ -57,13 +58,21 @@ class Player(game_objects.GameObject):
         scale = [self.image.get_width()*self.transform.scale, self.image.get_height()*self.transform.scale]
         self.image = pygame.transform.scale(self.image, scale)
 
+    def collide(self):
+        if ...:
+            ...
+
     def changepos(self, x):
         speed = self.speed
+        self.y += self.gravity()
         if self.state == "run":
             speed *= self.acc
             self.acc += 0.07
             self.acc = min(self.acc, 5)
         else:
             self.acc = 1
-        new = (x * speed, 0)
+        new = (x * speed, self.y)
         self.transform.move(new)
+
+    def gravity(self):
+        return 0.05
