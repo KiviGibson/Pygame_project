@@ -1,13 +1,16 @@
 import pygame
-from Objects import transform
+from Objects import transform, collider
 
 
 class GameObject(pygame.sprite.Sprite):
-    def __init__(self, position, name, scale=1):
+
+    def __init__(self, position, name="object", scale=1):
         super().__init__()
         self.transform = transform.Transform(position, 0, scale)
+        self.collider = None
         self.name = name
         self.game = None
+        self.collision = []
 
     @property
     def transform(self):
@@ -38,5 +41,14 @@ class GameObject(pygame.sprite.Sprite):
     def start(self, game):
         self.game = game
 
-    def update(self):
-        ...
+    def update(self, game):
+        self.collision = []
+        self.collider.colide([i for i in game.gameobjects if i != self and i.collider is not None])
+        for c in self.collider.collision:
+                self.on_collision(c)
+
+    def on_collision(self, other):
+        self.collision.append(other)
+
+    def __str__(self):
+        return self.name

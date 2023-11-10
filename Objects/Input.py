@@ -13,7 +13,7 @@ class Input:
         if pygame.joystick.get_init():
             try:
                 self.joystick = pygame.joystick.Joystick(0)
-                print(self.joystick.get_name()+ " was connected successfully!")
+                print(self.joystick.get_name() + " was connected successfully!")
             except:
                 pass
 

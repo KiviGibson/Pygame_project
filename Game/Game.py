@@ -2,9 +2,9 @@ from pygame import *
 import pygame
 from Game import options, map
 
+
 class Game:
     def __init__(self, tickrate=60, size=(400, 500), name="Game Title", img=""):
-        init()
         self.running = True
         self.option = options.Option(name, img, size, tickrate)
         self.clock = time.Clock()
@@ -16,32 +16,43 @@ class Game:
         display.set_mode(option.size)
         display.set_caption(option.title)
         self.map = map.Map()
-
         if option.icon:
             icon = image.load(option.icon)
             display.set_icon(icon)
 
     def setup(self):
         self.createmap()
+
+        for obj in self.map.colliders:
+            self.addobject(obj)
         for entity in self.gameobjects:
-            entity.start(self)
-            self.moving_sprites.add(entity)
+            try:
+                entity.start(self)
+                self.moving_sprites.add(entity)
+            except AttributeError:
+                pass
 
     def start(self):
         self.setup()
         while self.running:
-            self.events.clear()
-            for e in event.get():
-                if e.type == QUIT:
-                    self.running = False
-                self.events.append(e)
+            self.getevents()
             for entity in self.gameobjects:
-                entity.update()
-            self.moving_sprites.draw(display.get_surface())
+                try:
+                    entity.update(self)
+                except AttributeError:
+                    pass
             self.clock.tick(self.option.tickrate)
             self.refresh()
 
+    def getevents(self):
+        self.events.clear()
+        for e in event.get():
+            if e.type == QUIT:
+                self.running = False
+            self.events.append(e)
+
     def refresh(self):
+        self.moving_sprites.draw(display.get_surface())
         display.flip()
         display.get_surface().fill(self.map.color())
         display.get_surface().blit(self.map.map, (0, 0))

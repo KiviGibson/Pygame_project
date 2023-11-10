@@ -1,6 +1,8 @@
 import pygame
 import pytmx
-from Objects import player, colliders
+from Objects import player, tile
+
+
 class Map:
     def __init__(self, map_path="./Game/Map/scaled..tmx"):
         self.tmxdata = pytmx.load_pygame(map_path)
@@ -8,15 +10,16 @@ class Map:
         self.tilesize = 18
         self.map = None
         self.player = None
-        self.colliders = []
+        self._colliders = []
 
     def color(self):
         if self.tmxdata.background_color:
-           return self.tmxdata.background_color
+            return self.tmxdata.background_color
         else:
             return 21, 21, 21
 
     def load(self, surface, current_game):
+        c = []
         for layer in self.tmxdata.layers:
 
             if isinstance(layer, pytmx.TiledTileLayer):
@@ -26,28 +29,23 @@ class Map:
                             self.player = player.Player((x*18, y*18), current_game, scale=2, speed=3, skin="green")
                         else:
                             surface.blit(image.convert_alpha(), (x*18, y*18))
-                            if layer == "playable":
-                                self.colliders = colliders.Colliders(x*18, y*18)
+                            if layer.name == "playable":
+                                c.append(tile.Tile((x*18, y*18)))
+        self.colliders = c
 
-    def make_map(self,game):
-        temp_surface = pygame.Surface((self.tmxdata.width*18,self.tmxdata.height*18))
+    def make_map(self, game):
+        temp_surface = pygame.Surface((self.tmxdata.width*18, self.tmxdata.height*18))
         self.load(temp_surface, game)
         self.map = temp_surface
+
     @property
     def map(self):
         return self._map
 
     @map.setter
-    def map(self, map):
-        self._map = map
+    def map(self, m):
+        self._map = m
 
-    @property
-    def colliders(self):
-        return self._map
-
-    @colliders.setter
-    def colliders(self, map):
-        self._map = map
     @property
     def player(self):
         return self._player
@@ -55,3 +53,11 @@ class Map:
     @player.setter
     def player(self, p):
         self._player = p
+
+    @property
+    def colliders(self):
+        return self._colliders
+
+    @colliders.setter
+    def colliders(self, colliders):
+        self._colliders = colliders
