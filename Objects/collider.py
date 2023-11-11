@@ -6,10 +6,12 @@ class Collider:
         self.x = sizex/2
         self.collision = []
         self.onground = False
+        self.hit_celling = False
 
     def colide(self, other):
         collision = []
         self.onground = False
+        self.hit_celling = False
         for o in other:
             col = o.collider
             if abs(self.center[0] - col.center[0]) < self.x + col.x:
@@ -19,6 +21,7 @@ class Collider:
                     if abs(x) - abs(y) < 0:
                         if y > 0:
                             collision.append({"dir": "up", "obj": col})
+                            self.hit_celling = True
                         if y < 0:
                             collision.append({"dir": "down", "obj": col})
                             self.onground = True

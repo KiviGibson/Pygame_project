@@ -26,6 +26,7 @@ class Player(game_objects.GameObject):
         self.y = 0
         self.left = 1
         self.right = 1
+        self.can_jump = True
         size = 18*self.transform.scale
         self.collider = collider.Collider(self.transform.position[0], self.transform.position[1], size-3, size)
         self.onground = True
@@ -51,7 +52,9 @@ class Player(game_objects.GameObject):
         self.changepos(x)
         self.animate()
         self.rect.topleft = self.transform.position
-    
+
+    def jump(self):
+        self.y -= 7
     def start(self, game):
         super().start(game)
 
@@ -89,10 +92,16 @@ class Player(game_objects.GameObject):
 
     def changepos(self, x):
         speed = self.speed
+        if self.collider.hit_celling:
+            self.y = 0.5
         if not self.collider.onground:
             self.y += self.gravity()
         else:
             self.y = 0
+            self.can_jump = True
+        if self.input.jump and self.can_jump:
+            self.jump()
+            self.can_jump = False
         if self.state == "run":
             speed *= self.acc
             self.acc += 0.07
