@@ -10,7 +10,8 @@ class Map:
         self.tilesize = 18
         self.map = None
         self.player = None
-        self._colliders = []
+        self.colliders = []
+        self.surfaces = []
 
     def color(self):
         if self.tmxdata.background_color:
@@ -18,10 +19,12 @@ class Map:
         else:
             return 21, 21, 21
 
-    def load(self, surface, current_game):
+    def load(self, current_game):
         c = []
-        for layer in self.tmxdata.layers:
 
+        surfaces = []
+        for layer in self.tmxdata.layers:
+            surface = pygame.Surface((self.tmxdata.width * 18, self.tmxdata.height * 18), pygame.SRCALPHA)
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, image in layer.tiles():
                     if image:
@@ -31,12 +34,13 @@ class Map:
                             surface.blit(image.convert_alpha(), (x*18, y*18))
                             if layer.name == "playable":
                                 c.append(tile.Tile((x*18, y*18)))
+            surfaces.append(surface)
+        self.surfaces = surfaces
         self.colliders = c
 
     def make_map(self, game):
-        temp_surface = pygame.Surface((self.tmxdata.width*18, self.tmxdata.height*18))
-        self.load(temp_surface, game)
-        self.map = temp_surface
+        self.load(game)
+        self.map = self.surfaces
 
     @property
     def map(self):

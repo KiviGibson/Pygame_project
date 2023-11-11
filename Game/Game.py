@@ -52,10 +52,13 @@ class Game:
             self.events.append(e)
 
     def refresh(self):
-        self.moving_sprites.draw(display.get_surface())
+
         display.flip()
+
         display.get_surface().fill(self.map.color())
-        display.get_surface().blit(self.map.map, (0, 0))
+        display.get_surface().blits([(i, (0, 0)) for i in self.map.map[:4]])
+        self.moving_sprites.draw(display.get_surface())
+        display.get_surface().blits([(i, (0, 0)) for i in self.map.map[4:]])
 
     def createmap(self):
         self.map.make_map(self)
