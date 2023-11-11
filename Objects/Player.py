@@ -4,7 +4,7 @@ import pygame
 
 
 class Player(game_objects.GameObject):
-    def __init__(self, position, game, speed=3, scale=1, skin="green"):
+    def __init__(self, position, game, speed=3, scale=1, skin="red"):
         super().__init__(position, "Player", scale)
         self.loader = loader.Loader()
         self.animations = {
@@ -55,8 +55,10 @@ class Player(game_objects.GameObject):
 
     def jump(self):
         self.y -= 7
+
     def start(self, game):
         super().start(game)
+        game.target = self
 
     def check_collision(self):
         self.left = 1

@@ -12,6 +12,7 @@ class Game:
         self.userobjects = []
         self.events = []
         self.moving_sprites = pygame.sprite.Group()
+        self.target = None
         option = self.option
         display.set_mode(option.size)
         display.set_caption(option.title)
@@ -52,13 +53,17 @@ class Game:
             self.events.append(e)
 
     def refresh(self):
-
         display.flip()
-
         display.get_surface().fill(self.map.color())
-        display.get_surface().blits([(i, (0, 0)) for i in self.map.map[:4]])
-        self.moving_sprites.draw(display.get_surface())
-        display.get_surface().blits([(i, (0, 0)) for i in self.map.map[4:]])
+        surface = pygame.surface.Surface((70 * 18, 70 * 18))
+        surface.blits([(i, (0, 0)) for i in self.map.map[:4]])
+        self.moving_sprites.draw(surface)
+        surface.blits([(i, (0, 0)) for i in self.map.map[4:]])
+        try:
+            size = (display.get_surface().get_width(), display.get_surface().get_height())
+            display.get_surface().blit(surface, (-self.target.transform.position[0]+size[0]/2, -self.target.transform.position[1]+size[1]/2))
+        except:
+            display.get_surface().blit(surface, (0, 0))
 
     def createmap(self):
         self.map.make_map(self)

@@ -29,7 +29,7 @@ class Map:
                 for x, y, image in layer.tiles():
                     if image:
                         if layer.name == "player":
-                            self.player = player.Player((x*18, y*18), current_game, scale=2, speed=3, skin="green")
+                            self.player = player.Player((x*18, y*18), current_game, scale=2, speed=3, skin="red")
                         else:
                             surface.blit(image.convert_alpha(), (x*18, y*18))
                             if layer.name == "playable":
