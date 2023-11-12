@@ -100,6 +100,7 @@ class Player(game_objects.GameObject):
             self.y += self.gravity()
         else:
             self.y = 0
+            self.transform.position[1] = (self.transform.position[1]//18)*18
             self.can_jump = True
         if self.input.jump and self.can_jump:
             self.jump()
@@ -107,7 +108,7 @@ class Player(game_objects.GameObject):
         if self.state == "run":
             speed *= self.acc
             self.acc += 0.07
-            self.acc = min(self.acc, 5)
+            self.acc = min(self.acc, 2)
         else:
             self.acc = 1
         new = (x * speed, self.y)

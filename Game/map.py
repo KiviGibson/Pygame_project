@@ -32,8 +32,16 @@ class Map:
                             self.player = player.Player((x*18, y*18), current_game, scale=2, speed=3, skin="red")
                         else:
                             surface.blit(image.convert_alpha(), (x*18, y*18))
-                            if layer.name == "playable":
-                                c.append(tile.Tile((x*18, y*18)))
+            if isinstance(layer, pytmx.TiledObjectGroup):
+                while True:
+                    try:
+                        ob = layer.pop()
+                        print(ob)
+                        c.append(tile.Tile((ob.x, ob.y), (ob.width, ob.height)))
+                    except IndexError:
+                        break
+
+
             surfaces.append(surface)
         self.surfaces = surfaces
         self.colliders = c

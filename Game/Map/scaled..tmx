@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-up" width="70" height="70" tilewidth="18" tileheight="18" infinite="0" backgroundcolor="#7ff0a5" nextlayerid="16" nextobjectid="17">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-up" width="70" height="70" tilewidth="18" tileheight="18" infinite="0" backgroundcolor="#7ff0a5" nextlayerid="18" nextobjectid="136">
  <tileset firstgid="1" source="D:/Projects/map/background.tsx"/>
  <tileset firstgid="41" name="tilemap_packed" tilewidth="18" tileheight="18" tilecount="180" columns="20">
-  <image source="D:/Projects/map/tilemap_packed.png" trans="" width="360" height="162"/>
+  <image source="D:/Projects/map/tilemap_packed.png" width="360" height="162"/>
  </tileset>
  <layer id="4" name="background" width="70" height="70">
   <data encoding="csv">
@@ -374,6 +374,18 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="17" name="Object Layer 2">
+  <object id="116" x="270" y="450" width="54" height="72"/>
+  <object id="118" x="324" y="468" width="252" height="54"/>
+  <object id="119" x="594" y="504" width="54" height="18"/>
+  <object id="120" x="450" y="378" width="90" height="18"/>
+  <object id="121" x="414" y="576" width="252" height="108"/>
+  <object id="125" x="234" y="396" width="36" height="54"/>
+  <object id="126" x="216" y="360" width="36" height="36"/>
+  <object id="133" x="738" y="522" width="54" height="144"/>
+  <object id="134" x="792" y="522" width="144" height="54"/>
+  <object id="135" x="324" y="864" width="558" height="72"/>
+ </objectgroup>
  <layer id="13" name="coin" width="70" height="70">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
