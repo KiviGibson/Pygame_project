@@ -1,21 +1,20 @@
-from pygame import image
-import os
+from pygame import image, surface
+
 
 class Loader:
-    ROOT_FOLDER = os.path.dirname(os.path.abspath(__file__))
-    @classmethod
-    def load_image(cls, name, type):
-        print(cls.ROOT_FOLDER)
-        img = image.load(cls.path_to_folder+name+type)
+    def __init__(self, root: str):
+        self.ROOT_FOLDER = root
+
+    def load_image(self, name: str, format: str) -> surface.Surface:
+        img = image.load(self.ROOT_FOLDER+name+"."+format)
         return img
 
-    @classmethod
-    def load_image_array(cls, path_to_animation, type):
+    def load_image_array(self, path_to_animation_folder: str, format: str) -> list:
         images = []
         counter = 0
         while True:
             try:
-                images.append(image.load(f"{cls.path_to_folder}{path_to_animation}/{counter}.{type}"))
+                images.append(image.load(f"{self.ROOT_FOLDER}{path_to_animation_folder}/{counter}.{format}"))
                 counter += 1
             except FileNotFoundError:
                 break
