@@ -3,21 +3,22 @@ import pytmx
 
 
 class Map:
-    def __init__(self, map_path="./Game/Map/scaled..tmx"):
-        self.tmxdata = pytmx.load_pygame(map_path)
+    def __init__(self):
+        self.scene = None
         self.tilesize = 18
         self.surfaces = []
 
-    def color(self):
-        if self.tmxdata.background_color:
-            return self.tmxdata.background_color
+    def color(self) -> tuple:
+        if self.scene.background_color:
+            return self.scene.background_color
         else:
             return 21, 21, 21
 
-    def load(self, current_game):
+    def load_map(self, path: str) -> None:
+        scene = pytmx.load_pygame(path)
         self.surfaces = []
-        for layer in self.tmxdata.layers:
-            surface = pygame.Surface((self.tmxdata.width * 18, self.tmxdata.height * 18), pygame.SRCALPHA)
+        for layer in self.scene.layers:
+            surface = pygame.Surface((self.scene.width * 18, self.scene.height * 18), pygame.SRCALPHA)
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, image in layer.tiles():
                     if image:
@@ -25,6 +26,3 @@ class Map:
             if isinstance(layer, pytmx.TiledObjectGroup):
                 ...
             self.surfaces.append(surface)
-
-    def make_map(self, game):
-        self.load(game)
