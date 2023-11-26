@@ -5,7 +5,7 @@ import pytmx
 class Map:
     def __init__(self):
         self.scene = None
-        self.tilesize = 18
+        self.tile_size = 18
         self.surfaces = []
 
     def color(self) -> tuple:
@@ -15,10 +15,11 @@ class Map:
             return 21, 21, 21
 
     def load_map(self, path: str) -> None:
-        scene = pytmx.load_pygame(path)
+        self.scene = pytmx.load_pygame(path)
         self.surfaces = []
         for layer in self.scene.layers:
-            surface = pygame.Surface((self.scene.width * 18, self.scene.height * 18), pygame.SRCALPHA)
+            size = (self.scene.width * self.tile_size, self.scene.height * self.tile_size)
+            surface = pygame.Surface(size, pygame.SRCALPHA)
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, image in layer.tiles():
                     if image:
