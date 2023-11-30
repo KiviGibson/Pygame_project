@@ -1,6 +1,7 @@
 import pygame
 
 from Game.Objects import gameobject
+import Game.game as game
 
 
 class Player(gameobject.GameObject):
@@ -9,6 +10,7 @@ class Player(gameobject.GameObject):
     def __init__(self):
         super().__init__((50, 50), (200, 200), (100, 50, 230))
         self.mov_x = 0
+        self.mov_y = 0
 
     def update(self, events):
         for event in events:
@@ -17,6 +19,7 @@ class Player(gameobject.GameObject):
             elif event.type == pygame.KEYUP:
                 self.release_button(event.key)
         self.move()
+        self.mov_y += game.Game.GRAVITY
 
     def press_button(self, button):
         match button:
@@ -34,3 +37,4 @@ class Player(gameobject.GameObject):
 
     def move(self):
         self.rect.x += self.mov_x * Player.speed
+        self.rect.y += self.mov_y
