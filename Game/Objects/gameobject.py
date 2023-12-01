@@ -7,9 +7,6 @@ class GameObject(sprite.Sprite):
         super().__init__()
         self.image = Surface(size)
         self.image.fill(color)
-
+        self.x, self.y = position
         self.rect = self.image.get_rect()
-        self.rect.topleft = position
-
-    def __repr__(self) -> sprite.Sprite:
-        return self
+        self.rect.topleft = self.x, self.y
