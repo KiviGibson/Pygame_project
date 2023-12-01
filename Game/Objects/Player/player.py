@@ -2,23 +2,26 @@ import pygame
 
 from Game.Objects import gameobject
 import Game.game as game
+from squere_collider import SquereCollider
 
 
 class Player(gameobject.GameObject):
     speed = 3
 
-    def __init__(self):
-        super().__init__((50, 50), (200, 200), (100, 50, 230))
+    def __init__(self, size: tuple, position: tuple):
+        super().__init__(size, position, (100, 50, 230))
         self.mov_x = 0
         self.mov_y = 0
+        self.collider = SquereCollider((18, 18), (self.x, self.y), self)
 
-    def update(self, events):
-        for event in events:
+    def update(self, g):
+        for event in g.events:
             if event.type == pygame.KEYDOWN:
                 self.press_button(event.key)
             elif event.type == pygame.KEYUP:
                 self.release_button(event.key)
         self.move()
+        self.collider.collide_with(g)
         self.mov_y += game.Game.GRAVITY
 
     def press_button(self, button):
@@ -36,5 +39,11 @@ class Player(gameobject.GameObject):
                 self.mov_x += 1
 
     def move(self):
-        self.rect.x += self.mov_x * Player.speed
-        self.rect.y += self.mov_y
+        self.x += self.mov_x * Player.speed
+        self.y += self.mov_y
+        self.change_sprite_pos()
+        self.collider.change_collider_pos(self.x, self.y)
+
+    def change_sprite_pos(self):
+        self.rect.x = self.x
+        self.rect.y = self.y
