@@ -28,6 +28,7 @@ class Map:
         self.background_color = scene.background_color
         self.frontLayer = []
         self.backLayer = []
+        self.objects = []
         for layer in scene.layers:
             size = (scene.width * self.tile_size, scene.height * self.tile_size)
             surface = pygame.Surface(size, pygame.SRCALPHA)

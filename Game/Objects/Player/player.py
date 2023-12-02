@@ -20,9 +20,7 @@ class Player(gameobject.GameObject):
                 self.press_button(event.key)
             elif event.type == pygame.KEYUP:
                 self.release_button(event.key)
-        self.move()
-        self.collider.collide_with(g)
-        self.mov_y += game.Game.GRAVITY
+        self.move(g)
 
     def press_button(self, button):
         match button:
@@ -30,6 +28,8 @@ class Player(gameobject.GameObject):
                 self.mov_x += 1
             case pygame.K_a:
                 self.mov_x -= 1
+            case pygame.K_s:
+                self.mov_y += 1
 
     def release_button(self, button):
         match button:
@@ -37,8 +37,14 @@ class Player(gameobject.GameObject):
                 self.mov_x -= 1
             case pygame.K_a:
                 self.mov_x += 1
+            case pygame.K_s:
+                self.mov_y -= 1
 
-    def move(self):
+    def move(self, g):
+        self.mov_y += game.Game.GRAVITY
+        if len(self.collider.collide_with(g)) > 0:
+            self.mov_y = 0
+            self.y = int(self.y)
         self.x += self.mov_x * Player.speed
         self.y += self.mov_y
         self.change_sprite_pos()
