@@ -4,8 +4,8 @@ import map
 
 class Game:
     # Global values
-    GRAVITY = 0.07
-    SCALE = 1.0
+    GRAVITY = 0.2
+    SCALE = 1.2
 
     def __init__(self, definition: any):
         pygame.init()
@@ -18,7 +18,6 @@ class Game:
         self.map_manager = map.Map()
         self.frame = pygame.surface.Surface((1000, 1000))
         self.scaled = pygame.surface.Surface((self.frame.get_width() * Game.SCALE, self.frame.get_height() * Game.SCALE))
-
         self.start_game()
 
     def start_game(self) -> None:
@@ -60,7 +59,8 @@ class Game:
             go.update(self)
         self.check_quit()
         self.render()
-        self.clock.tick(120)
+        self.clock.tick(60)
+        print(self.clock.get_fps())
 
     def check_quit(self) -> None:
         """

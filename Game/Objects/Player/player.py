@@ -6,7 +6,7 @@ from squere_collider import SquereCollider
 
 
 class Player(gameobject.GameObject):
-    speed = 3
+    speed = 2
 
     def __init__(self, size: tuple, position: tuple):
         super().__init__(size, position, (100, 50, 230))
@@ -28,8 +28,8 @@ class Player(gameobject.GameObject):
                 self.mov_x += 1
             case pygame.K_a:
                 self.mov_x -= 1
-            case pygame.K_s:
-                self.mov_y += 1
+            case pygame.K_SPACE:
+                self.jump()
 
     def release_button(self, button):
         match button:
@@ -37,18 +37,20 @@ class Player(gameobject.GameObject):
                 self.mov_x -= 1
             case pygame.K_a:
                 self.mov_x += 1
-            case pygame.K_s:
-                self.mov_y -= 1
 
     def move(self, g):
         self.mov_y += game.Game.GRAVITY
         if len(self.collider.collide_with(g)) > 0:
-            self.mov_y = 0
+            if self.mov_y > 0:
+                self.mov_y = 0
             self.y = int(self.y)
         self.x += self.mov_x * Player.speed
         self.y += self.mov_y
         self.change_sprite_pos()
         self.collider.change_collider_pos(self.x, self.y)
+
+    def jump(self):
+        self.mov_y = -5
 
     def change_sprite_pos(self):
         self.rect.x = self.x
