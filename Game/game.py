@@ -7,7 +7,7 @@ class Game:
     GRAVITY = 0.2
     SCALE = 1.2
 
-    def __init__(self, definition: any):
+    def __init__(self, definition: any) -> None:
         pygame.init()
         self.root_dir = definition.ROOT_PATH
         self.running = False
@@ -60,8 +60,6 @@ class Game:
         self.check_quit()
         self.render()
         self.clock.tick(60)
-        print(self.clock.get_fps())
-
     def check_quit(self) -> None:
         """
         check if player want to exit, then close the game

@@ -1,6 +1,7 @@
 import game
 import pygame
 
+
 class Collision:
 
     def __init__(self, size: tuple, pos: tuple, parent: pygame.sprite.Sprite):
@@ -10,9 +11,6 @@ class Collision:
         self.size: tuple = size
         self.distance = []
         self.center = [0, 0]
-        self.onGround = False
-        self.onLeft = False
-        self.onRight = False
 
     def change_collider_pos(self, x: float, y: float) -> None:
         """
