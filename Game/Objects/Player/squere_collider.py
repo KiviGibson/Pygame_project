@@ -1,11 +1,11 @@
 import collision
 import game
-import pygame
+import gameobject
 
 
 class SquereCollider(collision.Collision):
 
-    def __init__(self, size: tuple, pos: tuple, parent: pygame.sprite.Sprite) -> None:
+    def __init__(self, size: tuple, pos: tuple, parent: gameobject.GameObject) -> None:
         super().__init__(size, pos, parent)
         self.distance = size[0] / 2, size[1] / 2
         self.center = pos[0] + size[0] / 2, pos[1] + size[1] / 2
@@ -15,10 +15,10 @@ class SquereCollider(collision.Collision):
         self.top = pos[1]
         self.down = pos[1] + size[1]
 
-    def check_if_colliding(self, other: pygame.sprite.Sprite) -> bool:
+    def check_if_colliding(self, other: gameobject.GameObject) -> bool:
         return self.parent.rect.colliderect(other)
 
-    def check_direction(self, other: collision.Collision) -> tuple:
+    def check_direction(self, other: any) -> tuple[float | None, float | None, bool, bool]:
         up = abs(self.top - other.down)
         down = abs(self.down - other.top)
         right = abs(self.right - other.left)
@@ -28,11 +28,9 @@ class SquereCollider(collision.Collision):
         elif down < right and down < left:
             return None, other.top - self.size[1]+0.5, True, False
         elif right < left:
-            print("right")
-            return other.left - self.size[0], None, False, False
+            return other.left - self.size[0]+1, None, True, False
         else:
-            print("left")
-            return other.right, None, False, False
+            return other.right-1, None, False, True
 
     def collide_with(self, g: game.Game) -> list:
         col = [obj for obj in g.objects if obj is not self.parent and self.check_if_colliding(obj)]

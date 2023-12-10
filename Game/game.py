@@ -4,8 +4,8 @@ import map
 
 class Game:
     # Global values
-    GRAVITY = 0.2
-    SCALE = 1.2
+    GRAVITY = 1
+    SCALE = 1
 
     def __init__(self, definition: any) -> None:
         pygame.init()
@@ -60,6 +60,7 @@ class Game:
         self.check_quit()
         self.render()
         self.clock.tick(60)
+
     def check_quit(self) -> None:
         """
         check if player want to exit, then close the game

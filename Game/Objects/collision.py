@@ -1,10 +1,10 @@
 import game
-import pygame
+import gameobject
 
 
 class Collision:
 
-    def __init__(self, size: tuple, pos: tuple, parent: pygame.sprite.Sprite):
+    def __init__(self, size: tuple, pos: tuple, parent: gameobject.GameObject):
         self.parent = parent
         self.y: float = pos[0]
         self.x: float = pos[1]

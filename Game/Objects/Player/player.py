@@ -5,14 +5,17 @@ import Game.game as game
 from squere_collider import SquereCollider
 
 
-class Player(gameobject.GameObject):
-    SPEED = 2
+class Player(gameobject.GameObject): 
+    SPEED = 4
 
     def __init__(self, size: tuple, position: tuple) -> None:
         super().__init__(size, position, (100, 50, 230))
-        self.mov_x = 0
-        self.mov_y = 0
-        self.collider = SquereCollider((18, 18), (self.x, self.y), self)
+        self.mov_x: float = 0
+        self.mov_y: float = 0
+        self.collider: SquereCollider = SquereCollider((18, 18), (self.x, self.y), self)
+        self.can_jump: int = 0
+        self.coyote_time_duration: int = 5
+        self.on_ground: bool = True
 
     def update(self, g) -> None:
         for event in g.events:
@@ -20,7 +23,13 @@ class Player(gameobject.GameObject):
                 self.press_button(event.key)
             elif event.type == pygame.KEYUP:
                 self.release_button(event.key)
-        self.move(g)
+        x, y = self.calculate_movement()
+        x, y = self.collide(g, x, y)
+        self.move(x, y)
+        if self.on_ground:
+            self.can_jump = self.coyote_time_duration
+        else:
+            self.can_jump -= 1
         self.collider.update(self.x, self.y)
 
     def press_button(self, button: int) -> None:
@@ -39,24 +48,41 @@ class Player(gameobject.GameObject):
             case pygame.K_a:
                 self.mov_x += 1
 
-    def move(self, g) -> None:
-        self.mov_y += game.Game.GRAVITY
+    def collide(self, g, x_dir, y_dir) -> tuple[float, float]:
+        on_g = False
         for obj in self.collider.collide_with(g):
-            x, y, on_ground, hit_celling = self.collider.check_direction(obj.collider)
+            x, y, first_side, second_side = self.collider.check_direction(obj.collider)
             try:
                 self.x = float(x)
+                if first_side:
+                    x_dir = min(x_dir, 0)
+                if second_side:
+                    x_dir = max(x_dir, 0)
             except TypeError:
                 self.y = float(y)
-                if on_ground:
-                    self.mov_y = min(self.mov_y, 0)
-                if hit_celling:
-                    self.mov_y = max(self.mov_y, 0)
-        self.x += self.mov_x * Player.SPEED
-        self.y += self.mov_y
+                if first_side:
+                    y_dir = min(y_dir, 0)
+                    on_g = True
+                if second_side:
+                    y_dir = max(y_dir, 0)
+        self.on_ground = on_g
+        self.mov_y = y_dir
+        return x_dir, y_dir
+
+    def calculate_movement(self) -> tuple[float, float]:
+        y = self.mov_y + game.Game.GRAVITY
+        x = self.mov_x * Player.SPEED
+        return x, y
+
+    def move(self, x, y) -> None:
+        self.x += x
+        self.y += y
         self.change_sprite_pos()
 
     def jump(self) -> None:
-        self.mov_y = -5.0
+        if self.can_jump > 0:
+            self.can_jump = 0
+            self.mov_y = -10.0
 
     def change_sprite_pos(self) -> None:
         self.rect.x = self.x
