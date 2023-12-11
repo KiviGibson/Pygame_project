@@ -2,30 +2,42 @@ import pygame
 import pytmx
 import player
 import box
+import gate
+import game
 
 
 class Map:
     TEST_MAP = "\\Map\\test..tmx"
     TEST2_MAP = "\\Map\\scaled..tmx"
 
-    def __init__(self):
+    def __init__(self, game: game.Game):
         self.tile_size = 18
         self.surfaces = []
         self.frontLayer = []
         self.backLayer = []
-        self.background_color = None
+        self.color = "#000000"
         self.scene = None
         self.objects = []
+        self.game = game
 
+    @property
     def color(self) -> tuple:
-        if self.background_color:
-            return self.background_color
+        if self._background_color:
+            return self._background_color
         else:
             return 21, 21, 21
 
-    def load_map(self, path: str) -> None:
-        scene = pytmx.load_pygame(path)
-        self.background_color = scene.background_color
+    @color.setter
+    def color(self, color_hex: str) -> None:
+        color = color_hex[1:]
+        r = int(color[0:2], 16)
+        g = int(color[2:4], 16)
+        b = int(color[4:6], 16)
+        self._background_color = (r, g, b)
+
+    def load_map(self, path: str, spawn: int) -> None:
+        self.scene = scene = pytmx.load_pygame(path)
+        self.color = scene.background_color
         self.frontLayer = []
         self.backLayer = []
         self.objects = []
@@ -39,10 +51,18 @@ class Map:
             if isinstance(layer, pytmx.TiledObjectGroup):
                 if layer.name == "Player":
                     for obj in layer:
-                        self.objects.append(player.Player((18, 18), (obj.x, obj.y)))
+                        if spawn > 0:
+                            spawn -= 1
+                        else:
+                            self.objects.append(player.Player((18, 18), (obj.x, obj.y)))
+                            break
                 if layer.name == "Collision":
                     for obj in layer:
                         self.objects.append(box.Box((obj.width, obj.height), (obj.x, obj.y)))
+                if layer.name == "Finish":
+                    for obj in layer:
+                        g = gate.Gate((obj.width, obj.height), (obj.x, obj.y), self.game, obj.path, obj.spawn)
+                        self.objects.append(g)
                 continue
             if layer.name[0:2] == "fr":
                 self.frontLayer.append(surface)

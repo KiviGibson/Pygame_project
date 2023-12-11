@@ -16,6 +16,7 @@ class Player(gameobject.GameObject):
         self.can_jump: int = 0
         self.coyote_time_duration: int = 5
         self.on_ground: bool = True
+        self.interact: bool = False
 
     def update(self, g) -> None:
         for event in g.events:
@@ -40,6 +41,8 @@ class Player(gameobject.GameObject):
                 self.mov_x -= 1
             case pygame.K_SPACE:
                 self.jump()
+            case pygame.K_e:
+                self.interact = True
 
     def release_button(self, button: int) -> None:
         match button:
@@ -47,6 +50,8 @@ class Player(gameobject.GameObject):
                 self.mov_x -= 1
             case pygame.K_a:
                 self.mov_x += 1
+            case pygame.K_e:
+                self.interact = False
 
     def collide(self, g, x_dir, y_dir) -> tuple[float, float]:
         on_g = False

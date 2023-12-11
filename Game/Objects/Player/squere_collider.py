@@ -5,8 +5,8 @@ import gameobject
 
 class SquereCollider(collision.Collision):
 
-    def __init__(self, size: tuple, pos: tuple, parent: gameobject.GameObject) -> None:
-        super().__init__(size, pos, parent)
+    def __init__(self, size: tuple, pos: tuple, parent: gameobject.GameObject, trigger=False) -> None:
+        super().__init__(size, pos, parent, trigger=trigger)
         self.distance = size[0] / 2, size[1] / 2
         self.center = pos[0] + size[0] / 2, pos[1] + size[1] / 2
         self.size: tuple = size
@@ -33,7 +33,15 @@ class SquereCollider(collision.Collision):
             return other.right-1, None, False, True
 
     def collide_with(self, g: game.Game) -> list:
-        col = [obj for obj in g.objects if obj is not self.parent and self.check_if_colliding(obj)]
+        col = [obj for obj in g.objects if obj is not self.parent and self.check_if_colliding(obj) and not obj.collider.trigger]
+        trigger = [obj for obj in g.objects if obj is not self.parent and self.check_if_colliding(obj) and obj.collider.trigger]
+        try:
+            for c in col:
+                c.collider.on_collision(self)
+            for t in trigger:
+                t.collider.on_collision(self)
+        except IndentationError:
+            pass
         return col
 
     def update(self, x: float, y: float) -> None:
