@@ -18,6 +18,12 @@ class SquereCollider(collision.Collision):
     def check_if_colliding(self, other: gameobject.GameObject) -> bool:
         return self.parent.rect.colliderect(other)
 
+    def check_if_trigger(self, obj: gameobject):
+        try:
+            return obj.collider.trigger
+        except AttributeError:
+            return False
+
     def check_direction(self, other: any) -> tuple[float | None, float | None, bool, bool]:
         up = abs(self.top - other.down)
         down = abs(self.down - other.top)
@@ -26,22 +32,30 @@ class SquereCollider(collision.Collision):
         if up < down and up < right and up < left:
             return None, other.down, False, True
         elif down < right and down < left:
-            return None, other.top - self.size[1]+0.5, True, False
+            return None, other.top - self.size[1] + 0.5, True, False
         elif right < left:
-            return other.left - self.size[0]+1, None, True, False
+            return other.left - self.size[0] + 1, None, True, False
         else:
-            return other.right-1, None, False, True
+            return other.right - 1, None, False, True
+
+    def have_collider(self, other):
+        try:
+            if other.collider:
+                return True
+        except AttributeError:
+            return False
 
     def collide_with(self, g: game.Game) -> list:
-        col = [obj for obj in g.objects if obj is not self.parent and self.check_if_colliding(obj) and not obj.collider.trigger]
-        trigger = [obj for obj in g.objects if obj is not self.parent and self.check_if_colliding(obj) and obj.collider.trigger]
-        try:
-            for c in col:
+        c = [obj for obj in g.objects if self.have_collider(obj)]
+        col = [obj for obj in c if obj is not self.parent and self.check_if_colliding(obj) and not self.check_if_trigger(obj)]
+        trigger = [obj for obj in c if obj is not self.parent and self.check_if_colliding(obj) and self.check_if_trigger(obj)]
+        for c in col:
+            try:
                 c.collider.on_collision(self)
-            for t in trigger:
-                t.collider.on_collision(self)
-        except IndentationError:
-            pass
+            except AttributeError:
+                pass
+        for t in trigger:
+            t.collider.on_collision(self)
         return col
 
     def update(self, x: float, y: float) -> None:

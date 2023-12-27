@@ -3,9 +3,10 @@ import map
 import gameobject
 import player
 
+
 class Game:
     # Global values
-    GRAVITY = 1
+    GRAVITY = 0.8
     SCALE = 1.5
 
     def __init__(self, definition: any) -> None:
@@ -51,8 +52,8 @@ class Game:
                 if isinstance(obj, player.Player):
                     self.change_camera_target(obj)
                     self.change_camera_position(self.target, snap=False)
-                    if obj.render:
-                        self.game_objects.add(obj)
+                if obj.render:
+                    self.game_objects.add(obj)
             except ValueError:
                 pass
 

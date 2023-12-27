@@ -54,7 +54,7 @@ class Map:
                         if spawn > 0:
                             spawn -= 1
                         else:
-                            self.objects.append(player.Player((18, 18), (obj.x, obj.y)))
+                            self.objects.append(player.Player((30, 36), (obj.x, obj.y)))
                             break
                 if layer.name == "Collision":
                     for obj in layer:
@@ -63,6 +63,7 @@ class Map:
                     for obj in layer:
                         g = gate.Gate((obj.width, obj.height), (obj.x, obj.y), self.game, obj.path, obj.spawn)
                         self.objects.append(g)
+                        self.objects.append(g.ui_icon)
                 continue
             if layer.name[0:2] == "fr":
                 self.frontLayer.append(surface)

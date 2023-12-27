@@ -1,19 +1,28 @@
 import pygame
 
-from Game.Objects import gameobject
 import Game.game as game
+import definition as df
+import loader
+from Game.Objects import gameobject
 from squere_collider import SquereCollider
 
 
 class Player(gameobject.GameObject): 
     SPEED = 4
 
-    def __init__(self, size: tuple, position: tuple) -> None:
-        super().__init__(size, position, (100, 50, 230))
+    def __init__(self, size=(30, 36), position=(0, 0)) -> None:
+        self.images = {
+            "idle": loader.Loader(df.ROOT_PATH).load_image_array("/Images/Animations/green/idle", "png"),
+            "walk": loader.Loader(df.ROOT_PATH).load_image_array("/Images/Animations/green/walk", "png")
+        }
+        super().__init__(size, position, img=self.images["idle"][0])
         self.mov_x: float = 0
         self.mov_y: float = 0
-        self.collider: SquereCollider = SquereCollider((18, 18), (self.x, self.y), self)
+        self.collider: SquereCollider = SquereCollider(size, (self.x, self.y), self)
         self.can_jump: int = 0
+        self.state = "idle"
+        self.side: bool = False
+        self.image_index: float = 0
         self.coyote_time_duration: int = 5
         self.on_ground: bool = True
         self.interact: bool = False
@@ -32,6 +41,7 @@ class Player(gameobject.GameObject):
         else:
             self.can_jump -= 1
         self.collider.update(self.x, self.y)
+        self.animate(x)
 
     def press_button(self, button: int) -> None:
         match button:
@@ -87,8 +97,23 @@ class Player(gameobject.GameObject):
     def jump(self) -> None:
         if self.can_jump > 0:
             self.can_jump = 0
-            self.mov_y = -10.0
+            self.mov_y = -12.8
 
     def change_sprite_pos(self) -> None:
         self.rect.x = self.x
         self.rect.y = self.y
+
+    def animate(self, x):
+        if x != 0:
+            self.state = "walk"
+            if x < 0:
+                self.side = True
+            else:
+                self.side = False
+        else:
+            self.state="idle"
+        max_img = len(self.images[self.state])
+        self.image = self.images[self.state][int(self.image_index) % max_img]
+        self.image = pygame.transform.flip(self.image, self.side, False)
+        self.image_index += 0.2
+        self.image_index %= max_img
