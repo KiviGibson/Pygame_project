@@ -1,75 +1,71 @@
 import pygame
 import pytmx
-from Objects import player, tile
+import player
+import box
+import gate
+import game
 
 
 class Map:
-    def __init__(self, map_path="./Game/Map/scaled..tmx"):
-        self.tmxdata = pytmx.load_pygame(map_path)
-        self.layer = []
-        self.tilesize = 18
-        self.map = None
-        self.player = None
-        self.colliders = []
-        self.surfaces = []
+    TEST_MAP = "\\Map\\test..tmx"
+    TEST2_MAP = "\\Map\\scaled..tmx"
 
-    def color(self):
-        if self.tmxdata.background_color:
-            return self.tmxdata.background_color
+    def __init__(self, game: game.Game):
+        self.tile_size = 18
+        self.surfaces = []
+        self.frontLayer = []
+        self.backLayer = []
+        self.color = "#000000"
+        self.scene = None
+        self.objects = []
+        self.game = game
+
+    @property
+    def color(self) -> tuple:
+        if self._background_color:
+            return self._background_color
         else:
             return 21, 21, 21
 
-    def load(self, current_game):
-        c = []
+    @color.setter
+    def color(self, color_hex: str) -> None:
+        color = color_hex[1:]
+        r = int(color[0:2], 16)
+        g = int(color[2:4], 16)
+        b = int(color[4:6], 16)
+        self._background_color = (r, g, b)
 
-        surfaces = []
-        for layer in self.tmxdata.layers:
-            surface = pygame.Surface((self.tmxdata.width * 18, self.tmxdata.height * 18), pygame.SRCALPHA)
+    def load_map(self, path: str, spawn: int) -> None:
+        self.scene = scene = pytmx.load_pygame(path)
+        self.color = scene.background_color
+        self.frontLayer = []
+        self.backLayer = []
+        self.objects = []
+        for layer in scene.layers:
+            size = (scene.width * self.tile_size, scene.height * self.tile_size)
+            surface = pygame.Surface(size, pygame.SRCALPHA)
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, image in layer.tiles():
                     if image:
-                        if layer.name == "player":
-                            self.player = player.Player((x*18, y*18), current_game, scale=2, speed=3, skin="red")
-                        else:
-                            surface.blit(image.convert_alpha(), (x*18, y*18))
+                        surface.blit(image, (x * 18, y * 18))
             if isinstance(layer, pytmx.TiledObjectGroup):
-                while True:
-                    try:
-                        ob = layer.pop()
-                        print(ob)
-                        c.append(tile.Tile((ob.x, ob.y), (ob.width, ob.height)))
-                    except IndexError:
-                        break
-
-
-            surfaces.append(surface)
-        self.surfaces = surfaces
-        self.colliders = c
-
-    def make_map(self, game):
-        self.load(game)
-        self.map = self.surfaces
-
-    @property
-    def map(self):
-        return self._map
-
-    @map.setter
-    def map(self, m):
-        self._map = m
-
-    @property
-    def player(self):
-        return self._player
-
-    @player.setter
-    def player(self, p):
-        self._player = p
-
-    @property
-    def colliders(self):
-        return self._colliders
-
-    @colliders.setter
-    def colliders(self, colliders):
-        self._colliders = colliders
+                if layer.name == "Player":
+                    for obj in layer:
+                        if spawn > 0:
+                            spawn -= 1
+                        else:
+                            self.objects.append(player.Player((30, 36), (obj.x, obj.y)))
+                            break
+                if layer.name == "Collision":
+                    for obj in layer:
+                        self.objects.append(box.Box((obj.width, obj.height), (obj.x, obj.y)))
+                if layer.name == "Finish":
+                    for obj in layer:
+                        g = gate.Gate((obj.width, obj.height), (obj.x, obj.y), self.game, obj.path, obj.spawn)
+                        self.objects.append(g)
+                        self.objects.append(g.ui_icon)
+                continue
+            if layer.name[0:2] == "fr":
+                self.frontLayer.append(surface)
+            else:
+                self.backLayer.append(surface)
