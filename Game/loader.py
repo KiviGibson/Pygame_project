@@ -1,4 +1,4 @@
-from pygame import image, surface
+from pygame import image, surface, mixer
 
 
 class Loader:
@@ -19,3 +19,9 @@ class Loader:
             except FileNotFoundError:
                 break
         return images
+
+    def load_sound(self, path: str) -> mixer.Sound:
+        try:
+            return mixer.Sound(file=self.ROOT_FOLDER + path)
+        except:
+            return mixer.Sound(None)
