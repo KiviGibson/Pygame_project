@@ -1,5 +1,4 @@
-import game
-import gameobject
+import Game.Objects.gameobject as gameobject
 
 
 class Collision:
@@ -18,7 +17,7 @@ class Collision:
         Change position of collider in space to passed value
         """
 
-    def collide_with(self, g: game.Game) -> list:
+    def collide_with(self, g: object) -> list:
         """
         return all colliding objects
         """

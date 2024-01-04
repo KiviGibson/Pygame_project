@@ -1,5 +1,5 @@
-import gameobject
-import squere_collider
+import Game.Objects.gameobject as gameobject
+import Game.Objects.Player.squere_collider as squere_collider
 
 
 class Box(gameobject.GameObject):

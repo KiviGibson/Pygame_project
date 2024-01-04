@@ -1,16 +1,15 @@
 import pygame
 import pytmx
-import player
-import box
-import gate
-import game
+import Game.Objects.Player.player as player
+import Game.Objects.box as box
+import Game.Objects.Gate.gate as gate
 
 
 class Map:
     TEST_MAP = "\\Map\\test..tmx"
     TEST2_MAP = "\\Map\\scaled..tmx"
 
-    def __init__(self, game: game.Game):
+    def __init__(self, game: object):
         self.tile_size = 18
         self.surfaces = []
         self.frontLayer = []

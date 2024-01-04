@@ -2,9 +2,9 @@ import pygame
 
 import Game.game as game
 import definition as df
-import loader
+import Game.loader as loader
 from Game.Objects import gameobject
-from squere_collider import SquereCollider
+from Game.Objects.Player.squere_collider import SquereCollider
 
 
 class Player(gameobject.GameObject): 

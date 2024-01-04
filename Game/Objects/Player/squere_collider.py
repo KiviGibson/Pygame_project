@@ -1,6 +1,5 @@
-import collision
-import game
-import gameobject
+import Game.Objects.collision as collision
+import Game.Objects.gameobject as gameobject
 
 
 class SquereCollider(collision.Collision):
@@ -45,7 +44,7 @@ class SquereCollider(collision.Collision):
         except AttributeError:
             return False
 
-    def collide_with(self, g: game.Game) -> list:
+    def collide_with(self, g: object) -> list:
         c = [obj for obj in g.objects if self.have_collider(obj)]
         col = [obj for obj in c if obj is not self.parent and self.check_if_colliding(obj) and not self.check_if_trigger(obj)]
         trigger = [obj for obj in c if obj is not self.parent and self.check_if_colliding(obj) and self.check_if_trigger(obj)]

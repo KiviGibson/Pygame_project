@@ -1,13 +1,12 @@
-import gameobject
-import game
-import squere_collider
-import loader
+import Game.Objects.gameobject as gameobject
+import Game.Objects.Player.squere_collider as squere_collider
+import Game.loader as loader
 import pygame
 import definition as df
 
 
 class Gate(gameobject.GameObject):
-    def __init__(self, size: tuple[float, float], position: tuple[float, float], game: game.Game, map: str, spawn: int):
+    def __init__(self, size: tuple[float, float], position: tuple[float, float], game: object, map: str, spawn: int):
         super().__init__(position=position, size=size, render=False)
         self.game = game
         self.map = map

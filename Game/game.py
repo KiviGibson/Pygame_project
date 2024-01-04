@@ -1,7 +1,7 @@
 import pygame
-import map
-import gameobject
-import player
+import Game.map as map
+import Game.Objects.gameobject as gameobject
+import Game.Objects.Player.player as player
 
 
 class Game:
