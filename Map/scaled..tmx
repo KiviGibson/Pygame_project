@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-up" width="70" height="70" tilewidth="18" tileheight="18" infinite="0" backgroundcolor="#7ff0a5" nextlayerid="20" nextobjectid="178">
- <tileset firstgid="1" source="D:/Projects/map/background.tsx"/>
+ <tileset firstgid="1" source="./tilesets/background.tsx"/>
  <tileset firstgid="41" name="tilemap_packed" tilewidth="18" tileheight="18" tilecount="180" columns="20">
-  <image source="D:/Projects/map/tilemap_packed.png" width="360" height="162"/>
+  <image source="D:./tilesets/tilemap_packed.png" width="360" height="162"/>
  </tileset>
  <layer id="4" name="background" width="70" height="70">
   <data encoding="csv">
