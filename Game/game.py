@@ -14,7 +14,7 @@ class Game:
         self.root_dir = definition.ROOT_PATH
         self.running = False
         self.game_objects = pygame.sprite.Group()
-        self.objects = []
+        self.objects: list[gameobject.GameObject] = []
         self.events = []
         self.clock = pygame.time.Clock()
         self.map_manager = map.Map(self)
@@ -36,24 +36,32 @@ class Game:
         pygame.quit()
 
     def test(self) -> None:
-        self.change_map(map.Map.TEST2_MAP, 1)
+        self.reload_map()
 
     def change_map(self, m: str, s: int) -> None:
         """
         changes maps
         """
-        self.objects = []
-        del self.game_objects
-        self.game_objects = pygame.sprite.Group()
+        self.dump_objects()
         self.map_manager.load_map(self.root_dir + m, s)
-        for obj in self.map_manager.objects:
-            self.objects.append(obj)
+        for obj in self.map_manager.get_objects():
+            self.add_game_object(obj)
             try:
                 if isinstance(obj, player.Player):
                     self.change_camera_target(obj)
                     self.change_camera_position(self.target, snap=False)
-                if obj.render:
-                    self.game_objects.add(obj)
+            except ValueError:
+                pass
+
+    def reload_map(self):
+        print("reset!")
+        self.dump_objects()
+        for obj in self.map_manager.get_objects():
+            self.add_game_object(obj)
+            try:
+                if isinstance(obj, player.Player):
+                    self.change_camera_target(obj)
+                    self.change_camera_position(self.target, snap=False)
             except ValueError:
                 pass
 
@@ -65,6 +73,9 @@ class Game:
 
         for go in self.objects:
             go.update(self)
+            if go.simulate:
+                go.sim(self)
+
         self.check_quit()
         self.change_camera_position(self.target)
         self.render()
@@ -117,3 +128,16 @@ class Game:
     @staticmethod
     def lerp(a: float, b: float, t: float):
         return (1 - t) * a + b * t
+
+    def add_game_object(self, o: gameobject.GameObject):
+        if o.render:
+            self.game_objects.add(o)
+        self.objects.append(o)
+
+    def remove_game_object(self, target: gameobject.GameObject):
+        self.objects.pop(self.objects.index(target))
+        self.game_objects.remove(target)
+
+    def dump_objects(self):
+        self.objects = []
+        self.game_objects = pygame.sprite.Group()
