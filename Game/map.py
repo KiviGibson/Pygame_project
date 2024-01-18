@@ -3,6 +3,7 @@ import pytmx
 import Game.Objects.Player.player as player
 import Game.Objects.box as box
 import Game.Objects.Gate.gate as gate
+import Game.Objects.RedDragon.dragon as dragon
 
 
 class Map:
@@ -17,6 +18,7 @@ class Map:
         self.color = "#000000"
         self.scene = None
         self.objects = []
+        self.recipe = []
         self.game = game
 
     @property
@@ -40,6 +42,7 @@ class Map:
         self.frontLayer = []
         self.backLayer = []
         self.objects = []
+        self.recipe = []
         for layer in scene.layers:
             size = (scene.width * self.tile_size, scene.height * self.tile_size)
             surface = pygame.Surface(size, pygame.SRCALPHA)
@@ -53,8 +56,11 @@ class Map:
                         if spawn > 0:
                             spawn -= 1
                         else:
-                            self.objects.append(player.Player((30, 36), (obj.x, obj.y)))
+                            self.recipe.append((lambda pos: player.Player((30, 36), pos), (obj.x, obj.y)))
                             break
+                if layer.name == "Test":
+                    for obj in layer:
+                        self.recipe.append((lambda pos: dragon.Dragon(position=pos, direction=False),(obj.x, obj.y)))
                 if layer.name == "Collision":
                     for obj in layer:
                         self.objects.append(box.Box((obj.width, obj.height), (obj.x, obj.y)))
@@ -68,3 +74,7 @@ class Map:
                 self.frontLayer.append(surface)
             else:
                 self.backLayer.append(surface)
+
+    def get_objects(self):
+        objects = self.objects.copy() + [ob[0](ob[1]) for ob in self.recipe]
+        return objects
