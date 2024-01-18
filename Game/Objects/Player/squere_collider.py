@@ -3,7 +3,6 @@ import Game.Objects.gameobject as gameobject
 
 
 class SquereCollider(collision.Collision):
-
     def __init__(self, size: tuple, pos: tuple, parent: gameobject.GameObject, trigger=False) -> None:
         super().__init__(size, pos, parent, trigger=trigger)
         self.distance = size[0] / 2, size[1] / 2
@@ -15,47 +14,51 @@ class SquereCollider(collision.Collision):
         self.down = pos[1] + size[1]
 
     def check_if_colliding(self, other: gameobject.GameObject) -> bool:
-        return self.parent.rect.colliderect(other)
+        return self.parent.rect.colliderect(other) and other is not self.parent
 
-    def check_if_trigger(self, obj: gameobject):
+    @staticmethod
+    def check_if_trigger(obj: gameobject):
         try:
             return obj.collider.trigger
         except AttributeError:
             return False
 
-    def check_direction(self, other: any) -> tuple[float | None, float | None, bool, bool]:
-        up = abs(self.top - other.down)
-        down = abs(self.down - other.top)
-        right = abs(self.right - other.left)
-        left = abs(self.left - other. right)
-        if up < down and up < right and up < left:
-            return None, other.down, False, True
-        elif down < right and down < left:
-            return None, other.top - self.size[1] + 0.5, True, False
-        elif right < left:
-            return other.left - self.size[0] + 1, None, True, False
-        else:
-            return other.right - 1, None, False, True
-
     def have_collider(self, other):
         try:
             if other.collider:
-                return True
+                return self.check_if_colliding(other)
+            else:
+                return False
         except AttributeError:
             return False
 
-    def collide_with(self, g: object) -> list:
-        c = [obj for obj in g.objects if self.have_collider(obj)]
-        col = [obj for obj in c if obj is not self.parent and self.check_if_colliding(obj) and not self.check_if_trigger(obj)]
-        trigger = [obj for obj in c if obj is not self.parent and self.check_if_colliding(obj) and self.check_if_trigger(obj)]
+    def check_collision(self, objects: gameobject) -> list:
+        collider = []
+        for c in filter(self.have_collider, objects):
+                collider.append((c, self.check_if_trigger(c)))
+        return collider
+
+    def collide_with(self, g: object) -> list[tuple[object, bool]]:
+        col, trigger = self.check_collision(g.objects)
         for c in col:
-            try:
-                c.collider.on_collision(self)
-            except AttributeError:
-                pass
+            c.collider.on_collision(self)
         for t in trigger:
             t.collider.on_collision(self)
         return col
+
+    def check_side(self, other: object) -> int:
+        under = abs(self.top - other.down)
+        ontop = abs(self.down - other.top)
+        onleft = abs(self.left - other.right)
+        onright = abs(self.right - other.left)
+        if under < ontop and under < onright and under < onleft:
+            return self.SIDES["down"]
+        elif ontop < onright and ontop < onleft:
+            return self.SIDES["top"]
+        elif onright < onleft:
+            return self.SIDES["left"]
+        else:
+            return self.SIDES["right"]
 
     def update(self, x: float, y: float) -> None:
         self.left = x
