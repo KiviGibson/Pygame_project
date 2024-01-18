@@ -4,6 +4,12 @@ import Game.Objects.gameobject as gameobject
 class Collision:
 
     def __init__(self, size: tuple, pos: tuple, parent: gameobject.GameObject, trigger=False):
+        self.SIDES = {
+            "top": 0,
+            "left": 1,
+            "right": 2,
+            "down": 3
+        }
         self.parent = parent
         self.y: float = pos[0]
         self.x: float = pos[1]
