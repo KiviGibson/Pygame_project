@@ -10,7 +10,7 @@ class Dragon(gm.CollisionObject):
         self.images = {
             "idle": loader.Loader().load_image_array("/Images/Animations/red/idle", "png"),
             "atack": loader.Loader().load_image_array("/Images/Animations/red/idle_run", "png"),
-            "death": loader.Loader().load_image_array(".Image/Animations/red/","png")
+            "death": loader.Loader().load_image_array("/Images/Animations/red/","png")
         }
         self.sounds = {
             "achoo": loader.Loader().load_sound("/Sounds/fire.wav"),
