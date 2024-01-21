@@ -7,6 +7,8 @@
       <sourceFolder url="file://$MODULE_DIR$/Game/Objects" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Game/Objects/Player" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Game/Objects/Gate" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Game/Objects/Enemies/Jumper" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Game/Objects/Enemies/RedDragon" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,6 +1,6 @@
 from PIL import Image
 
-name = "./Images/Animations/green/damage/2"
+name = "./Images/Animations/red/damage/2"
 format=".png"
 
 img = Image.open(name+format)
