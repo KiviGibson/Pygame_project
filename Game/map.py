@@ -3,7 +3,7 @@ import pytmx
 import Game.Objects.Player.player as player
 import Game.Objects.box as box
 import Game.Objects.Gate.gate as gate
-import Game.Objects.RedDragon.dragon as dragon
+import dragon as dragon
 
 
 class Map:
@@ -60,7 +60,7 @@ class Map:
                             break
                 if layer.name == "Test":
                     for obj in layer:
-                        self.recipe.append((lambda pos: dragon.Dragon(position=pos, direction=False),(obj.x, obj.y)))
+                        self.recipe.append((lambda pos: dragon.Dragon(position=pos, direction=False), (obj.x, obj.y)))
                 if layer.name == "Collision":
                     for obj in layer:
                         self.objects.append(box.Box((obj.width, obj.height), (obj.x, obj.y)))
