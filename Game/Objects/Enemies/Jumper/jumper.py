@@ -25,6 +25,7 @@ class Jumper(gameobject.CollisionObject):
         self.state = "idle"
         self.game: object = None
         self.player = None
+        
     def update(self, g):
         if self.game is None:
             self.game = g
