@@ -28,6 +28,9 @@ class Player(collisionobject.CollisionObject):
         self.coyote_time_duration: int = 5
         self.on_ground: bool = False
         self.interact: bool = False
+        self.pressed_a = False
+        self.pressed_d = False
+
 
     def update(self, g) -> None:
         for event in g.events:
@@ -35,6 +38,7 @@ class Player(collisionobject.CollisionObject):
                 self.press_button(event.key)
             elif event.type == pygame.KEYUP:
                 self.release_button(event.key)
+        self.set_movement()
         x = self.calculate_movement()
         self.mov_y = self.gravity(self.mov_y, self.on_ground)
         self.move(x, self.mov_y)
@@ -49,9 +53,9 @@ class Player(collisionobject.CollisionObject):
     def press_button(self, button: int) -> None:
         match button:
             case pygame.K_d:
-                self.mov_x += 1
+                self.pressed_d = True
             case pygame.K_a:
-                self.mov_x -= 1
+                self.pressed_a = True
             case pygame.K_SPACE:
                 self.jump()
             case pygame.K_e:
@@ -60,11 +64,19 @@ class Player(collisionobject.CollisionObject):
     def release_button(self, button: int) -> None:
         match button:
             case pygame.K_d:
-                self.mov_x -= 1
+                self.pressed_d = False
             case pygame.K_a:
-                self.mov_x += 1
+                self.pressed_a = False
             case pygame.K_e:
                 self.interact = False
+
+    def set_movement(self):
+        x = 0
+        if self.pressed_a:
+            x -= 1
+        if self.pressed_d:
+            x += 1
+        self.mov_x = x
 
     def jump(self, force=False) -> None:
         if self.can_jump > 0 or force:
