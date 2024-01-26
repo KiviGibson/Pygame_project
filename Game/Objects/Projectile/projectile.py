@@ -1,6 +1,6 @@
 import Game.Objects.gameobject as gm
 import Game.loader as loader
-import Game.Objects.Player.squere_collider as sqere_collider
+import Components.Colliders.squere_collider as sqere_collider
 import Game.Objects.Player.player as player
 
 
@@ -19,12 +19,16 @@ class Projectile(gm.GameObject):
         self.dir = direction
         self.side = False
         self.speed = 3.0
+        self.lifetime = 300
         self.game = game
         self.dont = dont
 
     def update(self, g):
         self.move()
         self.animate()
+        self.lifetime -= 1
+        if self.lifetime < 0:
+            self.end_of_lifecycle()
 
     def move(self):
         x, y = self.dir
@@ -39,7 +43,11 @@ class Projectile(gm.GameObject):
         self.sounds["explode"].play()
         self.game.remove_game_object(self)
         if isinstance(other, player.Player):
-            other.damage(self.game)
+            other.damage()
+        del self
+
+    def end_of_lifecycle(self):
+        self.game.remove_game_object(self)
         del self
 
     def animate(self):
