@@ -1,10 +1,13 @@
 import pygame
 import pytmx
 import Game.Objects.Player.player as player
-import Game.Objects.box as box
+import Box.box as box
 import Game.Objects.Gate.gate as gate
 import dragon as dragon
 import jumper as jumper
+import Game.Objects.Enemies.Walkie.walkie as walkie
+import Game.Objects.Coins.coins as coin
+import Game.Objects.Preasureplate.preasureplate as preasure_plate
 
 class Map:
     TEST_MAP = "\\Map\\test..tmx"
@@ -58,17 +61,32 @@ class Map:
                         else:
                             self.recipe.append((lambda pos: player.Player((30, 36), pos), (obj.x, obj.y)))
                             break
-                if layer.name == "Test":
+                if layer.name == "Walkie":
+                    for obj in layer:
+                        self.recipe.append((lambda pos: walkie.Walkie(position=pos, direction=False), (obj.x, obj.y)))
+                elif layer.name == "Jumper":
                     for obj in layer:
                         self.recipe.append((lambda pos: jumper.Jumper(position=pos, direction=False), (obj.x, obj.y)))
-                if layer.name == "Collision":
+                elif layer.name == "Dragon":
+                    for obj in layer:
+                        self.recipe.append((lambda pos: dragon.Dragon(position=pos, direction=False), (obj.x, obj.y)))
+                elif layer.name == "Collision":
                     for obj in layer:
                         self.objects.append(box.Box((obj.width, obj.height), (obj.x, obj.y)))
-                if layer.name == "Finish":
+                elif layer.name == "Finish":
                     for obj in layer:
                         g = gate.Gate((obj.width, obj.height), (obj.x, obj.y), self.game, obj.path, obj.spawn)
                         self.objects.append(g)
                         self.objects.append(g.ui_icon)
+                elif layer.name == "preasure_plate":
+                    for obj in layer:
+                        self.recipe.append((lambda params: preasure_plate.PreasurePlate(params[0], params[1], params[2]), ((18, 18), (obj.x, obj.y), obj.index)))
+                elif layer.name == "moving_object":
+                    ...
+                    # self.recipe.append((lambda params: ))
+                elif layer.name == "coins":
+                    for obj in layer:
+                        self.recipe.append((lambda pos: coin.Coin(pos), (obj.x, obj.y)))
                 continue
             if layer.name[0:2] == "fr":
                 self.frontLayer.append(surface)
