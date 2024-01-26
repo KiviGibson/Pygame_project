@@ -30,9 +30,12 @@ class Player(collisionobject.CollisionObject):
         self.interact: bool = False
         self.pressed_a = False
         self.pressed_d = False
+        self.game = None
 
 
     def update(self, g) -> None:
+        if self.game is None:
+            self.game = g
         for event in g.events:
             if event.type == pygame.KEYDOWN:
                 self.press_button(event.key)
@@ -109,6 +112,6 @@ class Player(collisionobject.CollisionObject):
     def play(self, name: str) -> None:
         self.sounds[name].play()
 
-    def damage(self, g):
+    def damage(self):
         self.sounds["hurt"].play()
-        g.reload_map()
+        self.game.reload_map()
