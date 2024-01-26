@@ -1,9 +1,11 @@
 from pygame import image, surface, mixer
 import definition
 
+
 class Loader:
     def __init__(self):
         self.ROOT_FOLDER = definition.ROOT_PATH
+
     def load_image(self, name: str, format: str) -> surface.Surface:
         img = image.load(self.ROOT_FOLDER+name+"."+format)
         return img
