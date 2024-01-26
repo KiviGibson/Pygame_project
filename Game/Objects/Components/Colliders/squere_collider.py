@@ -1,4 +1,4 @@
-import Game.Objects.collision as collision
+import Components.collision as collision
 import Game.Objects.gameobject as gameobject
 
 

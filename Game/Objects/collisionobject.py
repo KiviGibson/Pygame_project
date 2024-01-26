@@ -1,4 +1,4 @@
-import Game.Objects.Player.squere_collider as squere
+import Components.Colliders.squere_collider as squere
 import Game.Objects.gameobject as gm
 from pygame import Surface
 
