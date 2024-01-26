@@ -18,14 +18,14 @@ class Jumper(gameobject.CollisionObject):
         super().__init__(size, position, img=self.images["idle"][0], simulate=True)
         self.sounds["jump"].set_volume(0.3)
         self.frame = 0
-        self.timer = 80
+        self.timer = 20
         self.current = 0
         self.side = direction
         self.on_ground = True
         self.state = "idle"
         self.game: object = None
         self.player = None
-        
+
     def update(self, g):
         if self.game is None:
             self.game = g
@@ -77,4 +77,4 @@ class Jumper(gameobject.CollisionObject):
             del self
         elif side == self.collider.SIDES["top"]:
             if isinstance(other, player.Player):
-                other.damage(self.game)
+                other.damage()
