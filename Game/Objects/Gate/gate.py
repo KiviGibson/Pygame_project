@@ -1,8 +1,7 @@
 import Game.Objects.gameobject as gameobject
-import Game.Objects.Player.squere_collider as squere_collider
+import Components.Colliders.squere_collider as squere_collider
 import Game.loader as loader
 import pygame
-import definition as df
 
 
 class Gate(gameobject.GameObject):
