@@ -141,3 +141,12 @@ class Game:
     def dump_objects(self):
         self.objects = []
         self.game_objects = pygame.sprite.Group()
+
+    def find_object_by_id(self, index=-1) -> gameobject.GameObject:
+        for ob in self.objects:
+            try:
+                if ob.index == index:
+                    return ob
+            except:
+                pass
+        return None
