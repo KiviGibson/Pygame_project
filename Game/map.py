@@ -8,6 +8,8 @@ import jumper as jumper
 import Game.Objects.Enemies.Walkie.walkie as walkie
 import Game.Objects.Coins.coins as coin
 import Game.Objects.Preasureplate.preasureplate as preasure_plate
+import Game.Objects.MovingObject.platform as platform
+
 
 class Map:
     TEST_MAP = "\\Map\\test..tmx"
@@ -80,10 +82,10 @@ class Map:
                         self.objects.append(g.ui_icon)
                 elif layer.name == "preasure_plate":
                     for obj in layer:
-                        self.recipe.append((lambda params: preasure_plate.PreasurePlate(params[0], params[1], params[2]), ((18, 18), (obj.x, obj.y), obj.index)))
+                        self.recipe.append((lambda params: preasure_plate.PreasurePlate(params[0], params[1], params[2], params[3], params[4]), ((18, 18), (obj.x, obj.y), obj.targets, obj.methods, obj.params)))
                 elif layer.name == "moving_object":
-                    ...
-                    # self.recipe.append((lambda params: ))
+                    for obj in layer:
+                        self.recipe.append((lambda params: platform.Platform(params[0], params[1], params[2]), ((obj.x, obj.y), obj.segments, obj.index)))
                 elif layer.name == "coins":
                     for obj in layer:
                         self.recipe.append((lambda pos: coin.Coin(pos), (obj.x, obj.y)))
