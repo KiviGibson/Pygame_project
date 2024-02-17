@@ -2,6 +2,7 @@ import pygame
 import Game.map as map
 import Game.Objects.gameobject as gameobject
 import Game.Objects.Player.player as player
+import definition as df
 
 
 class Game:
@@ -20,9 +21,23 @@ class Game:
         self.map_manager = map.Map(self)
         self.frame = pygame.surface.Surface((1260, 1260), pygame.SRCALPHA)
         self.camera_pos = [0, 0]
-        self.scaled = pygame.surface.Surface((self.frame.get_width() * Game.SCALE, self.frame.get_height() * Game.SCALE))
+        self.scaled = pygame.surface.Surface(
+            (self.frame.get_width() * Game.SCALE,
+             self.frame.get_height() * Game.SCALE))
         self.target: gameobject.GameObject | None = None
+        self.screen_cover = self.create_cover()
+        self.cover_pos = 0
+        self.swap_time = False
+        self.hide = True
+        self.current_map = ()
+        self.next_map = ()
         self.start_game()
+
+    @staticmethod
+    def create_cover() -> pygame.surface.Surface:
+        cover = pygame.surface.Surface((1260, 1260), pygame.SRCALPHA)
+        cover.fill((159, 188, 77))
+        return cover
 
     def start_game(self) -> None:
         """
@@ -36,48 +51,66 @@ class Game:
         pygame.quit()
 
     def test(self) -> None:
-        self.reload_map()
+        self.swap_time = True
 
-    def change_map(self, m: str, s: int) -> None:
+    def change_map(self, m: str, s: int):
+        self.next_map = self.root_dir + m, s
+        self.swap_time = True
+    def swap_map(self) -> None:
         """
         changes maps
         """
-        self.dump_objects()
-        self.map_manager.load_map(self.root_dir + m, s)
-        for obj in self.map_manager.get_objects():
-            self.add_game_object(obj)
-            try:
-                if isinstance(obj, player.Player):
-                    self.change_camera_target(obj)
-                    self.change_camera_position(self.target, snap=False)
-            except ValueError:
-                pass
+        print("map swapped!")
+        self.map_manager.load_map(*self.next_map)
 
     def reload_map(self):
-        print("reset!")
-        self.dump_objects()
-        for obj in self.map_manager.get_objects():
-            self.add_game_object(obj)
-            try:
-                if isinstance(obj, player.Player):
-                    self.change_camera_target(obj)
-                    self.change_camera_position(self.target, snap=False)
-            except ValueError:
-                pass
+        if self.hide and self.transition_hide():
+            if not (self.next_map == self.current_map):
+                self.current_map = self.next_map
+                self.swap_map()
+            self.hide = False
+            self.dump_objects()
+            for obj in self.map_manager.get_objects():
+                self.add_game_object(obj)
+                try:
+                    if isinstance(obj, player.Player):
+                        self.change_camera_target(obj)
+                        self.change_camera_position(self.target, snap=False)
+                except ValueError:
+                    pass
+        if not self.hide and self.transition_show():
+            self.swap_time = False
+            self.hide = True
+
+    def transition_hide(self) -> bool:
+        if self.cover_pos <= 0:
+            return True
+        self.cover_pos -= 5
+        self.cover_pos = max(0, self.cover_pos)
+        return False
+
+    def transition_show(self) -> bool:
+        if self.cover_pos <= -100:
+            self.cover_pos = 100
+            return True
+        self.cover_pos -= 5
+        self.cover_pos = max(-100, self.cover_pos)
+        return False
 
     def update(self) -> None:
         """
         update state of the game, gameobjects
         """
         self.events = [e for e in pygame.event.get()]
-
-        for go in self.objects:
-            go.update(self)
-            if go.simulate:
-                go.sim(self)
-
-        self.check_quit()
+        if self.swap_time:
+            self.reload_map()
+        else:
+            for go in self.objects:
+                go.update(self)
+                if go.simulate:
+                    go.sim(self)
         self.change_camera_position(self.target)
+        self.check_quit()
         self.render()
         self.clock.tick(60)
 
@@ -103,6 +136,7 @@ class Game:
         [self.frame.blit(layer, (0, 0)) for layer in self.map_manager.backLayer]
         self.game_objects.draw(self.frame)
         [self.frame.blit(layer, (0, 0)) for layer in self.map_manager.frontLayer]
+        self.frame.blit(self.screen_cover, (self.screen_cover.get_width() * (self.cover_pos/100), 0))
         pygame.display.get_surface().fill((0, 0, 0))
         pygame.transform.scale(self.frame, self.scaled.get_size(), self.scaled)
         pygame.display.get_surface().blit(self.scaled, self.camera_pos)
@@ -119,15 +153,11 @@ class Game:
             pos_x = min(max(-target.x * Game.SCALE + target.rect.width / 2 + width / 2, max_x), 0)
             pos_y = min(max(-target.y * Game.SCALE + target.rect.height / 2 + height / 2, max_y), 0)
             if not snap:
-                pos_x = self.lerp(self.camera_pos[0], pos_x, 0.125)
-                pos_y = self.lerp(self.camera_pos[1], pos_y, 0.125)
+                pos_x = df.lerp(self.camera_pos[0], pos_x, 0.125)
+                pos_y = df.lerp(self.camera_pos[1], pos_y, 0.125)
             self.camera_pos = [pos_x, pos_y]
-        except ValueError:
+        except AttributeError:
             print("Cant find object!")
-
-    @staticmethod
-    def lerp(a: float, b: float, t: float):
-        return (1 - t) * a + b * t
 
     def add_game_object(self, o: gameobject.GameObject):
         if o.render:
@@ -145,8 +175,8 @@ class Game:
     def find_object_by_id(self, index=-1) -> gameobject.GameObject:
         for ob in self.objects:
             try:
-                if ob.index == index:
+                if int(ob.index) == index:
                     return ob
-            except:
+            except AttributeError:
                 pass
-        return None
+        raise ValueError(f"Can't find object with id {index}")
