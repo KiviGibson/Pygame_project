@@ -114,4 +114,5 @@ class Player(collisionobject.CollisionObject):
 
     def damage(self):
         self.sounds["hurt"].play()
-        self.game.reload_map()
+        self.image = self.images["damage"][1]
+        self.game.swap_time = True
