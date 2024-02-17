@@ -1,11 +1,11 @@
-import Game.Objects.gameobject as gm
+import Game.Objects.collisionobject as gm
 import Game.loader as loader
 import Components.Colliders.squere_collider as sqere_collider
 import Game.Objects.Player.player as player
 
 
-class Projectile(gm.GameObject):
-    def __init__(self, pos=(0, 0), direction=(0, 0), game=object(),dont=object()):
+class Projectile(gm.CollisionObject):
+    def __init__(self, pos=(0, 0), direction=(0, 0), game=object(), dont=object()):
         self.images = {
             "fireball": loader.Loader().load_image_array("/Images/Animations/fireball", "png"),
             "explosion": loader.Loader().load_image_array("/Images/Animations/explosion", "png")
@@ -24,13 +24,13 @@ class Projectile(gm.GameObject):
         self.dont = dont
 
     def update(self, g):
-        self.move()
+        self.move(0, 0)
         self.animate()
         self.lifetime -= 1
         if self.lifetime < 0:
             self.end_of_lifecycle()
 
-    def move(self):
+    def move(self, x, y):
         x, y = self.dir
         self.x += x * self.speed
         self.y += y * self.speed
