@@ -1,12 +1,11 @@
 import Game.Objects.gameobject as gm
 import Components.Colliders.squere_collider as collider
-import Game.Objects.Listener.observer as observer
 import loader
 
 
 class PreasurePlate(gm.GameObject):
 
-    def __init__(self, size, position, index=-1):
+    def __init__(self, size, position, targets:str, methods:str, params:str):
         super().__init__(size, position)
         self.images = {
             "pressed": loader.Loader().load_image("/Images/preassure_pad/pressed", "png"),
@@ -16,13 +15,19 @@ class PreasurePlate(gm.GameObject):
             "click": loader.Loader().load_sound("/Sounds/click.wav")
         }
         self.collider = collider.SquereCollider(size, position, self, True)
-        self.observer = observer.Observer("step_on", "continuous")
         self.image = self.images["not_pressed"]
         self.triggered = False
         self.cooldown = 0
-        self.index = index
+        self.targets = targets.strip().split(", ")
+        self.methods = methods.strip().split(", ")
+        self.params = params.strip().split(", ")
+        self.listeners = []
+        self.game = None
 
     def update(self, g):
+        if self.game == None:
+            self.game = g
+            self.find_targets()
         if self.triggered:
             self.cooldown -= 1
             if self.cooldown < 0:
@@ -34,10 +39,14 @@ class PreasurePlate(gm.GameObject):
 
     def on_trigger(self, other):
         if not self.triggered:
-            self.observer.activate_event("step_on")
+            for listener, params in self.listeners:
+                listener(params)
             self.triggered = True
             self.sounds["click"].play()
-        else:
-            self.observer.activate_event("continuous")
         self.image = self.images["pressed"]
         self.cooldown = 5
+
+    def find_targets(self):
+        zipped = zip(self.targets, self.methods, self.params)
+        for element in zipped:
+            self.listeners.append((self.game.find_object_by_id(int(element[0])).funcs[element[1]], element[2].strip(" ")))
