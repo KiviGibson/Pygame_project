@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="70" height="70" tilewidth="18" tileheight="18" infinite="0" backgroundcolor="#89cff0" nextlayerid="15" nextobjectid="58">
- <tileset firstgid="1" source="D:/Projects/map/objects.tsx"/>
- <tileset firstgid="49" source="D:/Projects/map/tilemap_packed.tsx"/>
+ <tileset firstgid="1" source="./tilesets/objects.tsx"/>
+ <tileset firstgid="49" source="./tilesets/tilemap_packed.tsx"/>
  <objectgroup id="8" name="Killzone">
   <object id="10" x="-11" y="725" width="1279" height="18"/>
  </objectgroup>
