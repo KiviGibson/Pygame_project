@@ -3,6 +3,8 @@ import Game.map as map
 import Game.Objects.gameobject as gameobject
 import Game.Objects.Player.player as player
 import definition as df
+import loader
+import Game.save_system as save_system
 
 
 class Game:
@@ -12,6 +14,8 @@ class Game:
 
     def __init__(self, definition: any) -> None:
         pygame.init()
+        self.save_system = save_system.SaveSystem()
+        self.font = pygame.font.Font(df.ROOT_PATH + "/Images/AtariClassic-gry3.ttf", 48)
         self.root_dir = definition.ROOT_PATH
         self.running = False
         self.game_objects = pygame.sprite.Group()
@@ -31,13 +35,12 @@ class Game:
         self.hide = True
         self.current_map = ()
         self.next_map = ()
+        self.coins = 0
         self.start_game()
 
     @staticmethod
-    def create_cover() -> pygame.surface.Surface:
-        cover = pygame.surface.Surface((1260, 1260), pygame.SRCALPHA)
-        cover.fill((159, 188, 77))
-        return cover
+    def create_cover() -> pygame.surface.Surface:        
+        return loader.Loader().load_image("/Images/cover", "png")
 
     def start_game(self) -> None:
         """
@@ -46,6 +49,7 @@ class Game:
         self.running = True
         pygame.display.set_mode((1000, 1000))
         self.change_map(map.Map.TEST_MAP, 0)
+        self.load_data()
         while self.running:
             self.update()
         pygame.quit()
@@ -56,12 +60,26 @@ class Game:
     def change_map(self, m: str, s: int):
         self.next_map = self.root_dir + m, s
         self.swap_time = True
+
     def swap_map(self) -> None:
         """
         changes maps
         """
         print("map swapped!")
+        data_to_save = {
+            "stats": {
+                "coins": str(self.coins)
+            }
+        }
+        self.save_system.save_data(data_to_save)
         self.map_manager.load_map(*self.next_map)
+
+    def load_data(self):
+        try:
+            saved_data = self.save_system.load_save_data()
+            self.coins = int(saved_data["stats"]["coins"])
+        except TypeError:
+            pass
 
     def reload_map(self):
         if self.hide and self.transition_hide():
@@ -70,6 +88,7 @@ class Game:
                 self.swap_map()
             self.hide = False
             self.dump_objects()
+            self.load_data()
             for obj in self.map_manager.get_objects():
                 self.add_game_object(obj)
                 try:
@@ -83,10 +102,10 @@ class Game:
             self.hide = True
 
     def transition_hide(self) -> bool:
-        if self.cover_pos <= 0:
+        if self.cover_pos <= -50:
             return True
         self.cover_pos -= 5
-        self.cover_pos = max(0, self.cover_pos)
+        self.cover_pos = max(-50, self.cover_pos)
         return False
 
     def transition_show(self) -> bool:
@@ -131,15 +150,17 @@ class Game:
         """
         create a new frame, then scale it and draw it on screen
         """
+        text = self.font.render(f"{self.coins}", True, (255, 255, 255))
         pygame.display.get_surface().fill(self.map_manager.color)
         self.frame.fill(self.map_manager.color)
         [self.frame.blit(layer, (0, 0)) for layer in self.map_manager.backLayer]
         self.game_objects.draw(self.frame)
         [self.frame.blit(layer, (0, 0)) for layer in self.map_manager.frontLayer]
-        self.frame.blit(self.screen_cover, (self.screen_cover.get_width() * (self.cover_pos/100), 0))
-        pygame.display.get_surface().fill((0, 0, 0))
         pygame.transform.scale(self.frame, self.scaled.get_size(), self.scaled)
+        pygame.display.get_surface().fill((0, 0, 0))
         pygame.display.get_surface().blit(self.scaled, self.camera_pos)
+        pygame.display.get_surface().blit(text, (10, 10))
+        pygame.display.get_surface().blit(self.screen_cover, (self.screen_cover.get_width() * (self.cover_pos/100), -200))
         pygame.display.flip()
 
     def change_camera_target(self, obj: gameobject.GameObject):
@@ -180,3 +201,6 @@ class Game:
             except AttributeError:
                 pass
         raise ValueError(f"Can't find object with id {index}")
+
+    def collect_coin(self):
+        self.coins += 1
