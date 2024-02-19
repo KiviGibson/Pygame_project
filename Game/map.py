@@ -12,10 +12,12 @@ import Game.Objects.MovingObject.platform as platform
 
 
 class Map:
-    TEST_MAP = "\\Map\\test..tmx"
-    TEST2_MAP = "\\Map\\scaled..tmx"
 
     def __init__(self, game: object):
+        self.maps = {
+            "test": "\\Map\\test..tmx",
+            "test_map2": "\\Map\\scaled..tmx",
+        }
         self.tile_size = 18
         self.surfaces = []
         self.frontLayer = []

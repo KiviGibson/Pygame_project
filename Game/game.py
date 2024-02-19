@@ -48,7 +48,7 @@ class Game:
         """
         self.running = True
         pygame.display.set_mode((1000, 1000))
-        self.change_map(map.Map.TEST_MAP, 0)
+        self.change_map(self.map_manager.maps["test"], 0)
         self.load_data()
         while self.running:
             self.update()
