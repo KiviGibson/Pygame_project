@@ -1,6 +1,6 @@
 import Game.Objects.collisionobject as gm
 import Game.loader as loader
-import Components.Colliders.squere_collider as sqere_collider
+import Game.Objects.Components.Colliders.squere_collider as sqere_collider
 import Game.Objects.Player.player as player
 
 

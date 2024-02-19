@@ -1,5 +1,5 @@
 import Game.Objects.gameobject as gameobject
-import Components.Colliders.squere_collider as squere_collider
+import Game.Objects.Components.Colliders.squere_collider as squere_collider
 import Game.loader as loader
 import pygame
 

@@ -1,5 +1,5 @@
 import Game.Objects.collisionobject as gameobject
-import loader
+import Game.loader as loader
 import Game.Objects.Player.player as player
 import pygame
 

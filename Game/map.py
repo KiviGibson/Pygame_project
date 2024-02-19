@@ -1,10 +1,10 @@
 import pygame
 import pytmx
 import Game.Objects.Player.player as player
-import Box.box as box
+import Game.Objects.Box.box as box
 import Game.Objects.Gate.gate as gate
-import dragon as dragon
-import jumper as jumper
+import Game.Objects.Enemies.RedDragon.dragon as dragon
+import Game.Objects.Enemies.Jumper.jumper as jumper
 import Game.Objects.Enemies.Walkie.walkie as walkie
 import Game.Objects.Coins.coins as coin
 import Game.Objects.Preasureplate.preasureplate as preasure_plate

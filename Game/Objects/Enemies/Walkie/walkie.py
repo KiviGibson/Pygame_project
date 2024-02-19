@@ -1,8 +1,8 @@
 import Game.Objects.collisionobject as gm
-import loader
+import Game.loader as loader
 import pygame
 import Game.Objects.Player.player as player
-import Box.box as box
+import Game.Objects.Box.box as box
 
 
 class Walkie(gm.CollisionObject):

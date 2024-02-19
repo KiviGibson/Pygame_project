@@ -2,6 +2,7 @@ import Game.Objects.gameobject as gameobject
 import Game.loader as loader
 import Game.Objects.Components.Colliders.squere_collider as collider
 
+
 class Coin(gameobject.GameObject):
 
     def __init__(self,pos):
@@ -12,7 +13,7 @@ class Coin(gameobject.GameObject):
         self.sounds = {
             "pick_up": loader.Loader().load_sound("/Sounds/pickup.wav")
         }
-        self.collider = collider.SquereCollider((18,18),pos,self,True)
+        self.collider = collider.SquereCollider((18, 18), pos, self, True)
         self.diff = 4
         self.dir = 1
         self.frame = 0
@@ -40,4 +41,5 @@ class Coin(gameobject.GameObject):
 
     def on_trigger(self, other):
         self.game.remove_game_object(self)
+        self.game.collect_coin()
         self.sounds["pick_up"].play()

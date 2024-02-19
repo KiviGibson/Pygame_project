@@ -1,6 +1,6 @@
 import Game.Objects.gameobject as gm
-import Components.Colliders.squere_collider as collider
-import loader
+import Game.Objects.Components.Colliders.squere_collider as collider
+import Game.loader as loader
 
 
 class PreasurePlate(gm.GameObject):
