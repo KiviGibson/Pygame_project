@@ -13,7 +13,8 @@ class Platform(gm.CollisionObject):
             "single": loader.Loader().load_image("/Images/platform/single", "png")
         }
         self.funcs = {
-            "move": lambda p: self.change_pos(p)
+            "move": lambda p: self.change_pos(p),
+            "move_to": lambda p: self.change_pos_to(p)
         }
         super().__init__((18 * segments, 18), pos)
         self.create_platform(segments)
@@ -34,6 +35,11 @@ class Platform(gm.CollisionObject):
         self.postarget = list(pos.split(" "))
         self.postarget[0] = int(self.postarget[0]) * 18 + self.x
         self.postarget[1] = int(self.postarget[1]) * 18 + self.y
+
+    def change_pos_to(self, pos: str):
+        self.postarget = list(pos.split(" "))
+        self.postarget[0] = int(self.postarget[0])
+        self.postarget[1] = int(self.postarget[1])
 
     def update(self, game):
         self.move()
