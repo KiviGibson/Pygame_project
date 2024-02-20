@@ -50,5 +50,7 @@ class Platform(gm.CollisionObject):
 
     def move(self) -> None:
         self.y = definition.lerp(self.y, self.postarget[1], 0.5)
+        self.x = definition.lerp(self.x, self.postarget[0], 0.5)
+        self.x = round(self.x, 2)
         self.y = round(self.y, 2)
-        super().move(0,0)
+        super().move(0, 0)

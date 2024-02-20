@@ -17,7 +17,8 @@ class Map:
     def __init__(self, game: object):
         self.maps = {
             "test": "\\Map\\test..tmx",
-            "forest_1": "\\Map\\forest_1..tmx"
+            "forest_1": "\\Map\\forest_1..tmx",
+            "forest_2": "\\Map\\forest_2..tmx"
         }
         self.tile_size = 18
         self.surfaces = []
@@ -51,6 +52,7 @@ class Map:
         self.backLayer = []
         self.objects = []
         self.recipe = []
+        spawn = int(spawn)
         for layer in scene.layers:
             size = (scene.width * self.tile_size, scene.height * self.tile_size)
             surface = pygame.Surface(size, pygame.SRCALPHA)
