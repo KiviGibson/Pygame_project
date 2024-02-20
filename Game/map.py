@@ -61,26 +61,26 @@ class Map:
                     if image:
                         surface.blit(image, (x * 18, y * 18))
             if isinstance(layer, pytmx.TiledObjectGroup):
-                if layer.name == "Player":
+                if layer.name == "player":
                     for obj in layer:
                         if spawn > 0:
                             spawn -= 1
                         else:
                             self.recipe.append((lambda pos: player.Player((30, 36), pos), (obj.x, obj.y)))
                             break
-                if layer.name == "Walkie":
+                if layer.name == "walkie":
                     for obj in layer:
                         self.recipe.append((lambda pos: walkie.Walkie(position=pos, direction=False), (obj.x, obj.y)))
-                elif layer.name == "Jumper":
+                elif layer.name == "jumper":
                     for obj in layer:
                         self.recipe.append((lambda pos: jumper.Jumper(position=pos, direction=False), (obj.x, obj.y)))
-                elif layer.name == "Dragon":
+                elif layer.name == "dragon":
                     for obj in layer:
                         self.recipe.append((lambda pos: dragon.Dragon(position=pos, direction=False), (obj.x, obj.y)))
-                elif layer.name == "Collision":
+                elif layer.name == "collision":
                     for obj in layer:
                         self.objects.append(box.Box((obj.width, obj.height), (obj.x, obj.y)))
-                elif layer.name == "Finish":
+                elif layer.name == "finish":
                     for obj in layer:
                         g = gate.Gate((obj.width, obj.height), (obj.x, obj.y), self.game, obj.path, obj.spawn)
                         self.objects.append(g)
@@ -93,7 +93,7 @@ class Map:
                 elif layer.name == "coins":
                     for obj in layer:
                         self.recipe.append((lambda pos: coin.Coin(pos), (obj.x, obj.y)))
-                elif layer.name == "Killzone":
+                elif layer.name == "killzone":
                     for obj in layer:
                         self.objects.append(killzone.Killzone((obj.width, obj.height), (obj.x, obj.y)))
                 continue
