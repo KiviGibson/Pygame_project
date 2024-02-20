@@ -48,7 +48,7 @@ class Game:
         """
         self.running = True
         pygame.display.set_mode((1000, 1000))
-        self.change_map(self.map_manager.maps["test"], 0)
+        self.change_map("test", 0)
         self.load_data()
         while self.running:
             self.update()
@@ -58,7 +58,7 @@ class Game:
         self.swap_time = True
 
     def change_map(self, m: str, s: int):
-        self.next_map = self.root_dir + m, s
+        self.next_map = self.root_dir + self.map_manager.maps[m], s
         self.swap_time = True
 
     def swap_map(self) -> None:
@@ -169,8 +169,8 @@ class Game:
     def change_camera_position(self, target: gameobject.GameObject, snap=False):
         try:
             width, height = pygame.display.get_window_size()
-            max_x = -self.frame.get_width() + width / 2
-            max_y = -self.frame.get_height() + height / 2
+            max_x = -self.frame.get_width() + width / (self.SCALE * 1.8)
+            max_y = -self.frame.get_height() + height / (self.SCALE * 1.8)
             pos_x = min(max(-target.x * Game.SCALE + target.rect.width / 2 + width / 2, max_x), 0)
             pos_y = min(max(-target.y * Game.SCALE + target.rect.height / 2 + height / 2, max_y), 0)
             if not snap:
