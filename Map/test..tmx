@@ -165,7 +165,7 @@
    <properties>
     <property name="methods" value="move"/>
     <property name="params" value="0 -3"/>
-    <property name="targets" type="int" value="1"/>
+    <property name="targets" value="1"/>
    </properties>
   </object>
  </objectgroup>
