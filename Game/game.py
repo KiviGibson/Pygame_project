@@ -58,8 +58,11 @@ class Game:
         self.swap_time = True
 
     def change_map(self, m: str, s: int):
-        self.next_map = self.root_dir + self.map_manager.maps[m], s
-        self.swap_time = True
+        try:
+            self.next_map = self.root_dir + self.map_manager.maps[m], s
+            self.swap_time = True
+        except KeyError:
+            raise ValueError(f"Map {m} not exists!")
 
     def swap_map(self) -> None:
         """
