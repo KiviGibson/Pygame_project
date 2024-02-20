@@ -9,6 +9,7 @@ import Game.Objects.Enemies.Walkie.walkie as walkie
 import Game.Objects.Coins.coins as coin
 import Game.Objects.Preasureplate.preasureplate as preasure_plate
 import Game.Objects.MovingObject.platform as platform
+import Game.Objects.Killzone.killzone as killzone
 
 
 class Map:
@@ -16,7 +17,7 @@ class Map:
     def __init__(self, game: object):
         self.maps = {
             "test": "\\Map\\test..tmx",
-            "test_map2": "\\Map\\scaled..tmx",
+            "forest_1": "\\Map\\forest_1..tmx"
         }
         self.tile_size = 18
         self.surfaces = []
@@ -90,6 +91,9 @@ class Map:
                 elif layer.name == "coins":
                     for obj in layer:
                         self.recipe.append((lambda pos: coin.Coin(pos), (obj.x, obj.y)))
+                elif layer.name == "Killzone":
+                    for obj in layer:
+                        self.objects.append(killzone.Killzone((obj.width, obj.height), (obj.x, obj.y)))
                 continue
             if layer.name[0:2] == "fr":
                 self.frontLayer.append(surface)
