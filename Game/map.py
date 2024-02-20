@@ -81,7 +81,6 @@ class Map:
                     for obj in layer:
                         g = gate.Gate((obj.width, obj.height), (obj.x, obj.y), self.game, obj.path, obj.spawn)
                         self.objects.append(g)
-                        self.objects.append(g.ui_icon)
                 elif layer.name == "preasure_plate":
                     for obj in layer:
                         self.recipe.append((lambda params: preasure_plate.PreasurePlate(params[0], params[1], params[2], params[3], params[4]), ((18, 18), (obj.x, obj.y), obj.targets, obj.methods, obj.params)))

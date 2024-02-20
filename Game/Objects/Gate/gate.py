@@ -6,15 +6,23 @@ import pygame
 
 class Gate(gameobject.GameObject):
     def __init__(self, size: tuple[float, float], position: tuple[float, float], game: object, map: str, spawn: int):
-        super().__init__(position=position, size=size, render=False)
+        self.images = {
+            "flag": loader.Loader().load_image_array("/Images/Animations/flag", "png")
+        }
+        super().__init__(position=position, size=size, img=self.images["flag"][0])
         self.game = game
         self.map = map
         self.spawn = spawn
         self.collider = squere_collider.SquereCollider(size, position, self, trigger=True)
-        img = loader.Loader().load_image("/Images/arrow_right_curve", "png")
-        ui = pygame.surface.Surface((32, 32), pygame.SRCALPHA)
-        pygame.transform.scale(img, (32, 32), ui)
-        self.ui_icon = gameobject.GameObject((32, 32), (position[0]-7, position[1]-32), img=ui)
+        self.frame = 0
+
+    def update(self, g):
+        self.animate()
+
+    def animate(self):
+        self.frame += 0.1
+        self.frame %= len(self.images["flag"])
+        self.image = self.images["flag"][int(self.frame)]
 
     def on_trigger(self, other) -> None:
         print("trigger!")
