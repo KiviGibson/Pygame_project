@@ -65,7 +65,6 @@ class Game:
         """
         changes maps
         """
-        print("map swapped!")
         data_to_save = {
             "stats": {
                 "coins": str(self.coins)

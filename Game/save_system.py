@@ -29,7 +29,6 @@ class SaveSystem:
         try:
             tree = et.parse(f"{self.root}/save.xml")
             root = tree.getroot()
-            print(root[0].attrib)
             data_to_return = {
                 "stats": {
                     "coins": root[0][0].text

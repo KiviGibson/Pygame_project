@@ -64,7 +64,6 @@ class Walkie(gm.CollisionObject):
             self.game.remove_game_object(self)
             del self
         elif isinstance(other, box.Box):
-            print("Hit")
             if side == self.collider.SIDES["top"]:
                 self.max_left = other.collider.left
                 self.max_right = other.collider.right
