@@ -5,7 +5,7 @@ import Game.Objects.Player.player as player
 import definition as df
 import loader
 import Game.save_system as save_system
-
+import Game.menu as menu
 
 class Game:
     # Global values
@@ -35,12 +35,26 @@ class Game:
         self.hide = True
         self.current_map = ()
         self.next_map = ()
+        self.map_name = ""
         self.coins = 0
-        self.start_game()
+        self.menu = menu.Menu()
+        if self.start_menu():
+            self.start_game()
 
     @staticmethod
     def create_cover() -> pygame.surface.Surface:        
         return loader.Loader().load_image("/Images/cover", "png")
+
+    def start_menu(self):
+        self.running = True
+        pygame.display.set_mode((1000, 1000))
+        while self.running:
+            self.menu.update()
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    return True
+                if event.type == pygame.QUIT:
+                    return False
 
     def start_game(self) -> None:
         """
@@ -50,6 +64,7 @@ class Game:
         pygame.display.set_mode((1000, 1000))
         self.change_map(map.Map.TEST_MAP, 0)
         self.load_data()
+        self.change_map("test", 0)
         while self.running:
             self.update()
         pygame.quit()
@@ -60,6 +75,12 @@ class Game:
     def change_map(self, m: str, s: int):
         self.next_map = self.root_dir + m, s
         self.swap_time = True
+        try:
+            self.next_map = self.root_dir + self.map_manager.maps[m], s
+            self.map_name = m
+            self.swap_time = True
+        except KeyError:
+            raise ValueError(f"Map {m} not exists!")
 
     def swap_map(self) -> None:
         """
@@ -68,7 +89,8 @@ class Game:
         print("map swapped!")
         data_to_save = {
             "stats": {
-                "coins": str(self.coins)
+                "coins": str(self.coins),
+                "map": f"{self.next_map[0]}, {self.next_map[1]}"
             }
         }
         self.save_system.save_data(data_to_save)

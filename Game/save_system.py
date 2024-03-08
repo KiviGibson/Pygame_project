@@ -32,7 +32,8 @@ class SaveSystem:
             print(root[0].attrib)
             data_to_return = {
                 "stats": {
-                    "coins": root[0][0].text
+                    "coins": root[0][0].text,
+                    "map": root[0][1].text
                 }
             }
             return data_to_return
