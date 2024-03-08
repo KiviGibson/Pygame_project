@@ -62,7 +62,7 @@ class Game:
         """
         self.running = True
         pygame.display.set_mode((1000, 1000))
-        self.change_map(map.Map.TEST_MAP, 0)
+        self.change_map("test", 0)
         self.load_data()
         self.change_map("test", 0)
         while self.running:
@@ -86,7 +86,6 @@ class Game:
         """
         changes maps
         """
-        print("map swapped!")
         data_to_save = {
             "stats": {
                 "coins": str(self.coins),
@@ -191,8 +190,8 @@ class Game:
     def change_camera_position(self, target: gameobject.GameObject, snap=False):
         try:
             width, height = pygame.display.get_window_size()
-            max_x = -self.frame.get_width() + width / 2
-            max_y = -self.frame.get_height() + height / 2
+            max_x = -self.frame.get_width() + width / (self.SCALE * 1.8)
+            max_y = -self.frame.get_height() + height / (self.SCALE * 1.8)
             pos_x = min(max(-target.x * Game.SCALE + target.rect.width / 2 + width / 2, max_x), 0)
             pos_y = min(max(-target.y * Game.SCALE + target.rect.height / 2 + height / 2, max_y), 0)
             if not snap:

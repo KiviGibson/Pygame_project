@@ -9,13 +9,17 @@ import Game.Objects.Enemies.Walkie.walkie as walkie
 import Game.Objects.Coins.coins as coin
 import Game.Objects.Preasureplate.preasureplate as preasure_plate
 import Game.Objects.MovingObject.platform as platform
+import Game.Objects.Killzone.killzone as killzone
 
 
 class Map:
-    TEST_MAP = "\\Map\\test..tmx"
-    TEST2_MAP = "\\Map\\scaled..tmx"
 
     def __init__(self, game: object):
+        self.maps = {
+            "test": "\\Map\\test..tmx",
+            "forest_1": "\\Map\\forest_1..tmx",
+            "forest_2": "\\Map\\forest_2..tmx"
+        }
         self.tile_size = 18
         self.surfaces = []
         self.frontLayer = []
@@ -48,6 +52,7 @@ class Map:
         self.backLayer = []
         self.objects = []
         self.recipe = []
+        spawn = int(spawn)
         for layer in scene.layers:
             size = (scene.width * self.tile_size, scene.height * self.tile_size)
             surface = pygame.Surface(size, pygame.SRCALPHA)
@@ -56,30 +61,29 @@ class Map:
                     if image:
                         surface.blit(image, (x * 18, y * 18))
             if isinstance(layer, pytmx.TiledObjectGroup):
-                if layer.name == "Player":
+                if layer.name == "player":
                     for obj in layer:
                         if spawn > 0:
                             spawn -= 1
                         else:
                             self.recipe.append((lambda pos: player.Player((30, 36), pos), (obj.x, obj.y)))
                             break
-                if layer.name == "Walkie":
+                if layer.name == "walkie":
                     for obj in layer:
                         self.recipe.append((lambda pos: walkie.Walkie(position=pos, direction=False), (obj.x, obj.y)))
-                elif layer.name == "Jumper":
+                elif layer.name == "jumper":
                     for obj in layer:
                         self.recipe.append((lambda pos: jumper.Jumper(position=pos, direction=False), (obj.x, obj.y)))
-                elif layer.name == "Dragon":
+                elif layer.name == "dragon":
                     for obj in layer:
                         self.recipe.append((lambda pos: dragon.Dragon(position=pos, direction=False), (obj.x, obj.y)))
-                elif layer.name == "Collision":
+                elif layer.name == "collision":
                     for obj in layer:
                         self.objects.append(box.Box((obj.width, obj.height), (obj.x, obj.y)))
-                elif layer.name == "Finish":
+                elif layer.name == "finish":
                     for obj in layer:
                         g = gate.Gate((obj.width, obj.height), (obj.x, obj.y), self.game, obj.path, obj.spawn)
                         self.objects.append(g)
-                        self.objects.append(g.ui_icon)
                 elif layer.name == "preasure_plate":
                     for obj in layer:
                         self.recipe.append((lambda params: preasure_plate.PreasurePlate(params[0], params[1], params[2], params[3], params[4]), ((18, 18), (obj.x, obj.y), obj.targets, obj.methods, obj.params)))
@@ -89,6 +93,9 @@ class Map:
                 elif layer.name == "coins":
                     for obj in layer:
                         self.recipe.append((lambda pos: coin.Coin(pos), (obj.x, obj.y)))
+                elif layer.name == "killzone":
+                    for obj in layer:
+                        self.objects.append(killzone.Killzone((obj.width, obj.height), (obj.x, obj.y)))
                 continue
             if layer.name[0:2] == "fr":
                 self.frontLayer.append(surface)

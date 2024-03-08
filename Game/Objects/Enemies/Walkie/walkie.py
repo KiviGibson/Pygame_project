@@ -41,9 +41,9 @@ class Walkie(gm.CollisionObject):
         if self.on_ground:
             self.mov_x = int(-(self.side-0.5)*2) * 2
             self.state = "walk"
-            if self.x > self.max_right - 32:
+            if self.x > self.max_right - 42:
                 self.side = True
-            elif self.x < self.max_left:
+            elif self.x < self.max_left + 10:
                 self.side = False
         else:
             self.state = "idle"
@@ -63,9 +63,9 @@ class Walkie(gm.CollisionObject):
             self.sounds["hurt"].play()
             self.game.remove_game_object(self)
             del self
-        elif side == self.collider.SIDES["top"] and isinstance(other, box.Box):
-            self.max_left = other.collider.left
-            self.max_right = other.collider.right
-        else:
-            if isinstance(other, player.Player):
+        elif isinstance(other, box.Box):
+            if side == self.collider.SIDES["top"]:
+                self.max_left = other.collider.left
+                self.max_right = other.collider.right
+        elif isinstance(other, player.Player):
                 other.damage()
