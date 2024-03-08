@@ -27,6 +27,8 @@ class PreasurePlate(gm.GameObject):
     def update(self, g):
         if self.game == None:
             self.game = g
+            for key in self.sounds:
+                self.sounds[key].set_volume(g.volume)
             self.find_targets()
         if self.triggered:
             self.cooldown -= 1

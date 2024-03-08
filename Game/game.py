@@ -37,6 +37,7 @@ class Game:
         self.next_map = ()
         self.map_name = ""
         self.coins = 0
+        self.volume = self.save_system.load_options()
         self.menu = menu.Menu()
         if self.start_menu():
             self.start_game()

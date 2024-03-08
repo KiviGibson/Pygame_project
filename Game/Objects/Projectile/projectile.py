@@ -21,6 +21,8 @@ class Projectile(gm.CollisionObject):
         self.speed = 3.0
         self.lifetime = 300
         self.game = game
+        for key in self.sounds:
+            self.sounds[key].set_volume(game.volume)
         self.dont = dont
 
     def update(self, g):

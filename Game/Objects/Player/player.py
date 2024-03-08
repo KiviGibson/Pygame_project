@@ -36,6 +36,8 @@ class Player(collisionobject.CollisionObject):
     def update(self, g) -> None:
         if self.game is None:
             self.game = g
+            for key in self.sounds:
+                self.sounds[key].set_volume(g.volume)
         for event in g.events:
             if event.type == pygame.KEYDOWN:
                 self.press_button(event.key)

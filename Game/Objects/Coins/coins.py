@@ -23,6 +23,8 @@ class Coin(gameobject.GameObject):
     def update(self, g):
         if self.game == None:
             self.game = g
+            for key in self.sounds:
+                self.sounds[key].set_volume(g.volume)
         self.levitate()
         self.animte()
 

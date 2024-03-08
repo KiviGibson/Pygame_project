@@ -29,6 +29,8 @@ class Jumper(gameobject.CollisionObject):
     def update(self, g):
         if self.game is None:
             self.game = g
+            for key in self.sounds:
+                self.sounds[key].set_volume(g.volume)
         self.mov_y = self.gravity(self.mov_y, self.on_ground)
         self.move(self.mov_x, self.mov_y)
         self.collider.update(self.x, self.y)
