@@ -3,9 +3,10 @@ import Game.map as map
 import Game.Objects.gameobject as gameobject
 import Game.Objects.Player.player as player
 import definition as df
-import loader
+import Game.loader as loader
 import Game.save_system as save_system
 import Game.menu as menu
+import Game.Objects.controls as controls
 
 class Game:
     # Global values
@@ -36,8 +37,10 @@ class Game:
         self.current_map = ()
         self.next_map = ()
         self.map_name = ""
+        self.spawn_point = 0
         self.coins = 0
         self.volume = self.save_system.load_options()
+        self.controls = controls.Controls(self)
         self.menu = menu.Menu()
         if self.start_menu():
             self.start_game()
@@ -63,45 +66,59 @@ class Game:
         """
         self.running = True
         pygame.display.set_mode((1000, 1000))
-        self.change_map("test", 0)
         self.load_data()
-        self.change_map("test", 0)
+        self.change_map("hub", 0, save=False)
         while self.running:
             self.update()
         pygame.quit()
 
-    def test(self) -> None:
-        self.swap_time = True
+    def continue_game(self):
+        self.change_map(self.map_name, self.spawn_point)
 
-    def change_map(self, m: str, s: int):
-        self.next_map = self.root_dir + m, s
-        self.swap_time = True
-        try:
-            self.next_map = self.root_dir + self.map_manager.maps[m], s
-            self.map_name = m
-            self.swap_time = True
-        except KeyError:
-            raise ValueError(f"Map {m} not exists!")
+    def new_game(self):
+        self.change_map("forest_1", 0)
+        self.coins = 0
+        self.save_data("forest_1", 0)
 
-    def swap_map(self) -> None:
-        """
-        changes maps
-        """
+    def save_data(self, name, spawn):
         data_to_save = {
             "stats": {
                 "coins": str(self.coins),
-                "map": f"{self.next_map[0]}, {self.next_map[1]}"
+                "map": f"{name}, {spawn}"
             }
         }
         self.save_system.save_data(data_to_save)
-        self.map_manager.load_map(*self.next_map)
+
+    def save_options(self):
+        self.save_system.save_options(self.volume)
 
     def load_data(self):
         try:
             saved_data = self.save_system.load_save_data()
             self.coins = int(saved_data["stats"]["coins"])
+            self.map_name, self.spawn_point = saved_data["stats"]["map"].split(", ")
         except TypeError:
             pass
+
+    def change_map(self, m: str, s: int, save=True):
+        if m == "new":
+            self.new_game()
+            return
+        if m == "continue":
+            self.continue_game()
+            return
+        self.next_map = self.root_dir + m, s
+        self.swap_time = True
+        try:
+            self.next_map = self.root_dir + self.map_manager.maps[m], s
+            self.swap_time = True
+            if save:
+                self.save_data(m, s)
+        except KeyError:
+            raise ValueError(f"Map {m} not exists!")
+
+    def swap_map(self) -> None:
+        self.map_manager.load_map(*self.next_map)
 
     def reload_map(self):
         if self.hide and self.transition_hide():
@@ -140,7 +157,7 @@ class Game:
 
     def update(self) -> None:
         """
-        update state of the game, gameobjects
+        update state of the game, gameobjects, and rendering
         """
         self.events = [e for e in pygame.event.get()]
         if self.swap_time:
@@ -161,12 +178,6 @@ class Game:
         """
         if pygame.QUIT in [e.type for e in self.events]:
             self.running = False
-        for event in self.events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
-                    self.test()
-                if event.key == pygame.K_0:
-                    print(self.clock.get_fps())
 
     def render(self) -> None:
         """
@@ -189,6 +200,9 @@ class Game:
         self.target = obj
 
     def change_camera_position(self, target: gameobject.GameObject, snap=False):
+        '''
+            Checks and positions camera in right spot not to show black screen
+        '''
         try:
             width, height = pygame.display.get_window_size()
             max_x = -self.frame.get_width() + width / (self.SCALE * 1.8)
@@ -216,6 +230,8 @@ class Game:
         self.game_objects = pygame.sprite.Group()
 
     def find_object_by_id(self, index=-1) -> gameobject.GameObject:
+        if index == -1:
+            return self.controls
         for ob in self.objects:
             try:
                 if int(ob.index) == index:

@@ -28,6 +28,14 @@ class SaveSystem:
                 tree.write(file)
             return 1
 
+    def save_options(self, v=0.1):
+        root = et.Element("root")
+        volume = et.SubElement(root, "volume")
+        volume.text = str(v)
+        tree = et.ElementTree(root)
+        with open(f"{self.root}/options.xml", "wb") as file:
+            tree.write(file)
+
     def save_data(self, data: dict):
         root = et.Element("root")
         stats = et.SubElement(root, "stats")
@@ -50,5 +58,5 @@ class SaveSystem:
                 }
             }
             return data_to_return
-        except ValueError:
+        except FileNotFoundError:
             return None

@@ -17,9 +17,6 @@ class Player(collisionobject.CollisionObject):
             "hit_ground": loader.Loader().load_sound("/Sounds/hit_ground.wav"),
             "hurt": loader.Loader().load_sound("/Sounds/damege.wav")
         }
-        self.sounds["walk"].set_volume(0.3)
-        self.sounds["hit_ground"].set_volume(0.3)
-        self.sounds["jump"].set_volume(0.3)
         super().__init__(size, position, img=self.images["idle"][0], simulate=True)
         self.can_jump: int = 0
         self.state = "idle"
@@ -31,7 +28,6 @@ class Player(collisionobject.CollisionObject):
         self.pressed_a = False
         self.pressed_d = False
         self.game = None
-
 
     def update(self, g) -> None:
         if self.game is None:
@@ -112,6 +108,7 @@ class Player(collisionobject.CollisionObject):
             self.play("walk")
 
     def play(self, name: str) -> None:
+        self.sounds[name].set_volume(self.game.volume)
         self.sounds[name].play()
 
     def damage(self):

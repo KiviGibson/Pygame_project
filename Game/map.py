@@ -16,6 +16,7 @@ class Map:
 
     def __init__(self, game: object):
         self.maps = {
+            "hub": "\\Map\\hub..tmx",
             "test": "\\Map\\test..tmx",
             "forest_1": "\\Map\\forest_1..tmx",
             "forest_2": "\\Map\\forest_2..tmx"
