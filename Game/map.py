@@ -18,7 +18,7 @@ class Map:
     def __init__(self, game: object):
         self.maps = {
             "hub": "\\Map\\hub..tmx",
-            "test": "\\Map\\test..tmx",
+            "test": "\\Map\\test_map..tmx",
             "forest_1": "\\Map\\forest_1..tmx",
             "forest_2": "\\Map\\forest_2..tmx"
         }
@@ -91,7 +91,7 @@ class Map:
                         self.recipe.append((lambda params: preasure_plate.PreasurePlate(params[0], params[1], params[2], params[3], params[4]), ((18, 18), (obj.x, obj.y), obj.targets, obj.methods, obj.params)))
                 elif layer.name == "moving_object":
                     for obj in layer:
-                        self.recipe.append((lambda params: platform.Platform(params[0], params[1], params[2]), ((obj.x, obj.y), obj.segments, obj.index)))
+                        self.recipe.append((lambda params: platform.Platform(*params), ((obj.x, obj.y), obj.segments, obj.index, obj.speed)))
                 elif layer.name == "coins":
                     for obj in layer:
                         self.recipe.append((lambda pos: coin.Coin(pos), (obj.x, obj.y)))
