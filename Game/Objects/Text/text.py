@@ -6,7 +6,7 @@ import Game.Objects.gameobject as gm
 class Text(gm.GameObject):
     def __init__(self, string: str, position):
 
-        self.font = pygame.font.Font(df.ROOT_PATH+"/Images/AtariClassic-gry3.ttf", 11)
+        self.font = pygame.font.Font(df.ROOT_PATH+"/Images/AtariClassic-gry3.ttf", 14)
         print(string)
         self.text = self.font.render(string, 0, (255, 255, 255))
         super().__init__((self.text.get_width(), self.text.get_height()),
