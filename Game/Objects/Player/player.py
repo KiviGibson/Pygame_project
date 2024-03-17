@@ -22,7 +22,8 @@ class Player(collisionobject.CollisionObject):
         self.state = "idle"
         self.side: bool = False
         self.image_index: float = 0
-        self.coyote_time_duration: int = 5
+        self.coyote_time_duration: int = 7
+        self.jump_buffer: int = 7
         self.on_ground: bool = False
         self.interact: bool = False
         self.pressed_a = False
@@ -45,7 +46,11 @@ class Player(collisionobject.CollisionObject):
         self.move(x, self.mov_y)
         if self.on_ground:
             self.can_jump = self.coyote_time_duration
+            if self.jump_buffer > 0:
+                self.jump()
+                self.jump_buffer = 0
         else:
+            self.jump_buffer -= 1
             self.can_jump -= 1
         self.collider.update(self.x, self.y)
         self.stomp()
@@ -58,7 +63,7 @@ class Player(collisionobject.CollisionObject):
             case pygame.K_a:
                 self.pressed_a = True
             case pygame.K_SPACE:
-                self.jump()
+                self.jump_buffer = 7
             case pygame.K_e:
                 self.interact = True
 

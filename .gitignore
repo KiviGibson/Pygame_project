@@ -153,3 +153,4 @@ cython_debug/
 imgresize.py
 .idea/Pygame_project.iml
 save.xml
+options.xml
