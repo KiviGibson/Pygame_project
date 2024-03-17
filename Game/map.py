@@ -10,6 +10,7 @@ import Game.Objects.Coins.coins as coin
 import Game.Objects.Preasureplate.preasureplate as preasure_plate
 import Game.Objects.MovingObject.platform as platform
 import Game.Objects.Killzone.killzone as killzone
+import Game.Objects.Text.text as text
 
 
 class Map:
@@ -97,6 +98,9 @@ class Map:
                 elif layer.name == "killzone":
                     for obj in layer:
                         self.objects.append(killzone.Killzone((obj.width, obj.height), (obj.x, obj.y)))
+                elif layer.name == "text":
+                    for obj in layer:
+                        self.objects.append(text.Text(obj.text, (obj.x, obj.y)))
                 continue
             if layer.name[0:2] == "fr":
                 self.frontLayer.append(surface)
