@@ -5,7 +5,7 @@ import pygame
 
 
 class Platform(gm.CollisionObject):
-    def __init__(self, pos, segments, index):
+    def __init__(self, pos, segments, index, speed="0.2"):
         self.images = {
             "start": loader.Loader().load_image("/Images/platform/start", "png"),
             "mid": loader.Loader().load_image("/Images/platform/mid", "png"),
@@ -20,6 +20,7 @@ class Platform(gm.CollisionObject):
         self.create_platform(segments)
         self.postarget = [self.x, self.y]
         self.index = index
+        self.speed = speed
 
     def create_platform(self, segments):
         self.image = pygame.surface.Surface((18 * segments, 18))
@@ -49,8 +50,8 @@ class Platform(gm.CollisionObject):
         ...
 
     def move(self) -> None:
-        self.y = definition.lerp(self.y, self.postarget[1], 0.5)
-        self.x = definition.lerp(self.x, self.postarget[0], 0.5)
-        self.x = round(self.x, 2)
-        self.y = round(self.y, 2)
+        self.y = definition.lerp(self.y, self.postarget[1], self.speed)
+        self.x = definition.lerp(self.x, self.postarget[0], self.speed)
+        self.x = round(self.x, 1)
+        self.y = round(self.y, 1)
         super().move(0, 0)
