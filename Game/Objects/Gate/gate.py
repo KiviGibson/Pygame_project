@@ -25,7 +25,6 @@ class Gate(gameobject.GameObject):
         self.image = self.images["flag"][int(self.frame)]
 
     def on_trigger(self, other) -> None:
-        print("trigger!")
         try:
             if other.interact:
                 self.game.change_map(self.map, self.spawn)
