@@ -23,7 +23,7 @@ class Player(collisionobject.CollisionObject):
         self.side: bool = False
         self.image_index: float = 0
         self.coyote_time_duration: int = 7
-        self.jump_buffer: int = 7
+        self.jump_buffer: int = 0
         self.on_ground: bool = False
         self.interact: bool = False
         self.pressed_a = False
