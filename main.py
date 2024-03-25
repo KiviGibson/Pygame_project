@@ -1,11 +1,10 @@
-from Game import game
-from Objects import player
+import Game.game as game
+import definition as df
 
 
-def start():
-    current_game = game.Game(tickrate=60, name="Tiny Dino", size=(500, 600))
-    current_game.start()
+def start_game() -> None:
+    game.Game(df)
 
 
 if __name__ == "__main__":
-    start()
+    start_game()
