@@ -53,6 +53,6 @@ class Projectile(gm.CollisionObject):
         del self
 
     def animate(self):
-        self.frame += 0.2
+        self.frame += 0.25
         self.frame %= 4
         self.image = self.images["fireball"][int(self.frame)]
