@@ -6,7 +6,7 @@ import pygame
 
 
 class Dragon(gm.CollisionObject):
-    def __init__(self, size=(36, 36), position=(0, 0), direction=False):
+    def __init__(self, size=(36, 36), position=(0, 0), direction=False, speed=2.0):
         self.images = {
             "idle": loader.Loader().load_image_array("/Images/Animations/red/idle", "png"),
             "atack": loader.Loader().load_image_array("/Images/Animations/red/idle_run", "png"),
@@ -23,6 +23,7 @@ class Dragon(gm.CollisionObject):
         self.timer = 120
         self.current = 0
         self.delay = 30
+        self.speed = speed
         self.side = direction
         self.on_ground = True
         self.state = "idle"
@@ -51,7 +52,7 @@ class Dragon(gm.CollisionObject):
         self.image = pygame.transform.flip(self.image, self.side, False)
 
     def windup(self) -> bool:
-        self.current += 1
+        self.current += self.speed
         if self.current > self.timer:
             return True
         return False
@@ -60,8 +61,7 @@ class Dragon(gm.CollisionObject):
         self.sounds["achoo"].play()
         self.current = -30
         self.state = "atack"
-        game.add_game_object(projectile.Projectile((self.x, self.y+15), ((0.5-self.side) * 2, 0), game=game,dont=self))
-        print("Achooo!")
+        game.add_game_object(projectile.Projectile((self.x, self.y+15), ((0.5-self.side) * 2, 0), game=game, dont=self))
 
     def on_collision(self, other):
         super().on_collision(other)

@@ -20,7 +20,8 @@ class Map:
             "hub": "\\Map\\hub..tmx",
             "test": "\\Map\\test_map..tmx",
             "forest_1": "\\Map\\forest_1..tmx",
-            "forest_2": "\\Map\\forest_2..tmx"
+            "forest_2": "\\Map\\forest_2..tmx",
+            "forest_3": "\\Map\\forest_3..tmx"
         }
         self.tile_size = 18
         self.surfaces = []
@@ -78,7 +79,7 @@ class Map:
                         self.recipe.append((lambda pos: jumper.Jumper(position=pos, direction=False), (obj.x, obj.y)))
                 elif layer.name == "dragon":
                     for obj in layer:
-                        self.recipe.append((lambda pos: dragon.Dragon(position=pos, direction=False), (obj.x, obj.y)))
+                        self.recipe.append((lambda params: dragon.Dragon(position=params[0], direction=params[1], speed=params[2]), ((obj.x, obj.y), obj.rotate, obj.atack)))
                 elif layer.name == "collision":
                     for obj in layer:
                         self.objects.append(box.Box((obj.width, obj.height), (obj.x, obj.y)))

@@ -5,7 +5,7 @@ import Game.Objects.Components.Colliders.squere_collider as collider
 
 class Coin(gameobject.GameObject):
 
-    def __init__(self,pos):
+    def __init__(self, pos):
         super().__init__((18, 18), pos)
         self.images = {
             "rotation": loader.Loader().load_image_array("/Images/Animations/coin", "png")
@@ -21,7 +21,7 @@ class Coin(gameobject.GameObject):
         self.game = None
 
     def update(self, g):
-        if self.game == None:
+        if self.game is None:
             self.game = g
             for key in self.sounds:
                 self.sounds[key].set_volume(g.volume)
